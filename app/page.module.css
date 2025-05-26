@@ -161,6 +161,12 @@ a.secondary {
   }
 }
 
+.landingImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 @media (prefers-color-scheme: dark) {
   .logo {
     filter: invert();
