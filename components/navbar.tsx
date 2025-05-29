@@ -53,10 +53,10 @@ export default function NavBar() {
           </button>
           {isDropdownOpen && (
             <div className="absolute bg-white rounded-sm shadow-lg border-1 p-2" id="dropdown-menu">
-              <Link href="/cpu" className="navbtn block">
+              <Link href="/components/cpu" className="navbtn block" onClick={() => setIsDropdownOpen(false)}>
                 Central Processing Unit (CPU)
               </Link>
-              <Link href="/gpu" className="navbtn block">
+              <Link href="/components/gpu" className="navbtn block" onClick={() => setIsDropdownOpen(false)}>
                 Graphical Processing Unit (GPU)
               </Link>
             </div>
@@ -79,19 +79,19 @@ export default function NavBar() {
           className="absolute top-16 left-0 bg-white w-full shadow-lg p-4"
           id="mobile-menu"
         >
-          <Link href="/" className="block py-2 hover:border-b-2">
+          <Link href="/" className="block py-2 hover:border-b-2" onClick={() => setIsMobileMenuOpen(false)}>
             Home
           </Link>
-          <Link href="/pc-selection" className="block py-2 hover:border-b-2">
+          <Link href="/pc-selection" className="block py-2 hover:border-b-2" onClick={() => setIsMobileMenuOpen(false)}>
             PC Selection
           </Link>
-          <Link href="/pc-builder" className="block py-2 hover:border-b-2">
+          <Link href="/pc-builder" className="block py-2 hover:border-b-2" onClick={() => setIsMobileMenuOpen(false)}>
             PC Builder
           </Link>
-          <Link href="/cpu" className="block py-2 hover:border-b-2">
+          <Link href="/components/cpu" className="block py-2 hover:border-b-2" onClick={() => setIsMobileMenuOpen(false)}>
             Central Processing Unit(CPU)
           </Link>
-          <Link href="/gpu" className="block py-2 hover:border-b-2">
+          <Link href="/components/gpu" className="block py-2 hover:border-b-2" onClick={() => setIsMobileMenuOpen(false)}>
             Graphical Processing Unit(GPU)
           </Link>
         </div>
