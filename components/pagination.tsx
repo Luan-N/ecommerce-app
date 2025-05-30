@@ -13,6 +13,7 @@ export default function Pagination({ totalPages }: PaginationProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page") || 1);
+  
   const buildQuery = (page: number) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", page.toString());
@@ -30,7 +31,7 @@ export default function Pagination({ totalPages }: PaginationProps) {
       <Link
         href={buildQuery(currentPage - 1)}
         className={`
-          px-4 py-2 text-sm sm:text-base 
+          px-4 py-2 text-sm sm:text-base w-[120px] text-center
           border border-gray-300 bg-white 
           rounded-l-full hover:bg-gray-100 transition-colors 
           ${!hasPrevious ? 'pointer-events-none opacity-50' : ''}
@@ -60,7 +61,7 @@ export default function Pagination({ totalPages }: PaginationProps) {
       <Link
         href={buildQuery(currentPage + 1)}
         className={`
-          px-4 py-2 text-sm sm:text-base 
+          px-4 py-2 text-sm sm:text-base w-[120px] text-center
           border border-gray-300 bg-white 
           rounded-r-full hover:bg-gray-100 transition-colors 
           ${!hasNext ? 'pointer-events-none opacity-50' : ''}

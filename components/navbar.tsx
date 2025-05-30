@@ -15,7 +15,7 @@ export default function NavBar() {
     "px-4 py-2 rounded-md text-sm font-medium transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-300";
 
   return (
-    <nav className="fixed flex md:block top-0 w-full bg-white/95 backdrop-blur-md shadow-md z-50">
+    <nav className="fixed md:block top-0 w-full bg-white/95 backdrop-blur-md shadow-md z-50">
       <div className="w-full flex items-center justify-between h-16 px-6">
         {/* Logo */}
         <Link href="/" className="hidden md:flex items-center space-x-1 text-2xl font-extrabold">
@@ -74,11 +74,11 @@ export default function NavBar() {
         {/* Mobile Hamburger + Bookmark */}
         <div className="w-full md:w-auto flex items-center justify-between">
           <button
-            className="md:hidden p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-300"
+            className="md:hidden flex justify-center items-center p-2 size-10 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-300"
             aria-label="Toggle menu"
             onClick={() => setMobileOpen((o) => !o)}
           >
-            {mobileOpen ? <VscClose /> : <RiMenuFold2Fill />}
+            {mobileOpen ? <VscClose className="text-xl"/> : <RiMenuFold2Fill className="text-xl"/>}
           </button>
           <Link href="/bookmarks" aria-label="Bookmarks">
             <CiBookmark className="text-2xl hover:text-orange-500 transition" />

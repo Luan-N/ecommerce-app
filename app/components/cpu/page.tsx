@@ -1,22 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import {
-  CardTitle,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardAction,
-  Card,
-} from "@/components/ui/card";
 
-import BreadCrumbNavigation from "@/components/breadcrumbnav";
-
+import BreadCrumbNavigation from "@/components/breadcrumb-nav";
 import Pagination from "@/components/pagination";
+import SearchProductCard from "@/components/search-product-card";
+import ComponentFilter from "@/components/component-filter";
 
 type cpuSchema = {
   ID: string;
@@ -60,23 +50,12 @@ export default function CpuPage() {
       {/* CPU Navigation */}
       <nav className="mb-10 flex justify-center" aria-label="cpu-navigation">
         <div className="inline-flex items-center justify-center gap-1 bg-muted border rounded-md p-1">
-          {["All", "AMD", "Intel"].map((manf) => {
-            const isActive = manfParam?.toLowerCase() === manf.toLowerCase();
-            return (
-              <Link
-                key={manf}
-                href={`/components/cpu?manf=${manf.toLowerCase()}`}
-                className={`px-4 py-1 text-sm font-medium rounded-md transition-colors ${
-                  isActive
-                    ? "bg-white text-black shadow"
-                    : "text-muted-foreground hover:bg-white/30"
-                }`}
-                aria-current={isActive ? "page" : undefined}
-              >
-                {manf}
-              </Link>
-            );
-          })}
+          {["All", "AMD", "Intel"].map((manf) => (
+            <ComponentFilter
+              key={manf}
+              manf={manf}
+            />
+          ))}
         </div>
       </nav>
 
@@ -93,87 +72,23 @@ export default function CpuPage() {
       />
 
       <section aria-label="cpu-list">
-        {cpus.map((cpu, index) => (
-          <Card
-            key={index}
-            className="flex flex-col items-center my-4 md:flex-row gap-6 p-6
-    bg-white border border-gray-200 shadow-md
-    hover:border-orange-600 hover:shadow-lg hover:-translate-y-1 transform transition"
-          >
-            {/* CPU Image */}
-            <div
-              className="w-auto md:w-[150px] md:min-w-[150px] h-auto md:h-[150px] "
-              aria-label="cpu-image"
-            >
-              <Link href={`/components/${cpu.ID}`}>
-                <Image
-                  src={cpu["Image URL"]}
-                  alt={cpu.Name}
-                  width={200}
-                  height={200}
-                  className="h-auto w-auto"
-                />
-              </Link>
-            </div>
-
-            {/* CPU Details */}
-            <div className="flex flex-col justify-between flex-grow gap-5">
-              {/* Name */}
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold">
-                  <Link
-                    href={`/components/${cpu.ID}`}
-                    className="hover:text-orange-600"
-                  >
-                    {cpu.Name} {cpu.Cores}C/{cpu.Threads}T Max Processor Speed{" "}
-                    {cpu["Boost Clock Frequency"]} Mhz {cpu["L3 Cache"]} L3
-                    Cache
-                  </Link>
-                </CardTitle>
-              </CardHeader>
-              {/* Description */}
-              <CardContent className="flex flex-wrap gap-4 text-sm md:text-base text-gray-700 mt-4">
-                <div className="flex-1 min-w-[120px]">
-                  <p className="text-gray-500">Processor Type</p>
-                  <p className="font-semibold">
-                    {cpu.Name.match(/(?:Ryzen\s\d|Core\s[im]\d)/i)}
-                  </p>
-                </div>
-                <div className="flex-1 min-w-[120px]">
-                  <p className="text-gray-500">Processor Max Speed</p>
-                  <p className="font-semibold">
-                    {cpu["Boost Clock Frequency"]} Mhz
-                  </p>
-                </div>
-                <div className="flex-1 min-w-[120px]">
-                  <p className="text-gray-500">Cores/Threads</p>
-                  <p className="font-semibold">
-                    {cpu.Cores}C/{cpu.Threads}T
-                  </p>
-                </div>
-                <div className="flex-1 min-w-[120px]">
-                  <p className="text-gray-500">L3 Cache</p>
-                  <p className="font-semibold">{cpu["L3 Cache"]}</p>
-                </div>
-              </CardContent>
-
-              {/* View Details */}
-              <CardFooter className="justify-center md:justify-end mt-4">
-                <Link
-                  href={`/components/${cpu.ID}`}
-                  className="
-        bg-orange-600 text-white font-semibold px-4 py-2 rounded-md
-        hover:bg-orange-700 active:bg-orange-800
-        transition-colors
-        shadow-sm hover:shadow-md
-      "
-                >
-                  View Details
-                </Link>
-              </CardFooter>
-            </div>
-          </Card>
+        {cpus.map((cpu) => (
+          <SearchProductCard
+            key={cpu.ID}
+            product={{
+              ID: cpu.ID,
+              Name: `${cpu.Name} ${cpu.Cores}C/${cpu.Threads}T ${cpu["Boost Clock Frequency"]} Mhz Processor Speed ${cpu["L3 Cache"]} L3 Cache`,
+              Description: [
+                ["Processor Type", cpu.Name.match(/(?:Ryzen\s\d|Core\s[im]\d)/i)?.[0] || "Unknown"],
+                ["Cores/Threads", `${cpu.Cores}C/${cpu.Threads}T`],
+                ["Boost Clock Frequency", cpu["Boost Clock Frequency"]],
+                ["L3 Cache", cpu["L3 Cache"]],
+              ],
+              "Image URL": cpu["Image URL"],
+            }}
+          />
         ))}
+        
         {/* Pagination */}
         <Pagination totalPages={totalPages} />
       </section>
