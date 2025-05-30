@@ -14,6 +14,8 @@ import {
   Card,
 } from "@/components/ui/card";
 
+import BreadCrumbNavigation from "@/components/breadcrumbnav";
+
 import Pagination from "@/components/pagination";
 
 type cpuSchema = {
@@ -57,15 +59,17 @@ export default function CpuPage() {
     <main className="mt-25 mx-5 md:mx-15">
       {/* CPU Navigation */}
       <nav className="mb-10 flex justify-center" aria-label="cpu-navigation">
-        <div className="flex justify-center items-center bg-white border rounded-sm w-auto">
+        <div className="inline-flex items-center justify-center gap-1 bg-muted border rounded-md p-1">
           {["All", "AMD", "Intel"].map((manf) => {
-            const isActive = manfParam?.toLowerCase() == manf.toLowerCase();
+            const isActive = manfParam?.toLowerCase() === manf.toLowerCase();
             return (
               <Link
                 key={manf}
                 href={`/components/cpu?manf=${manf.toLowerCase()}`}
-                className={`text-lg px-5 w-auto rounded-sm hover:bg-accent ${
-                  isActive ? "bg-gray-200" : ""
+                className={`px-4 py-1 text-sm font-medium rounded-md transition-colors ${
+                  isActive
+                    ? "bg-white text-black shadow"
+                    : "text-muted-foreground hover:bg-white/30"
                 }`}
                 aria-current={isActive ? "page" : undefined}
               >
@@ -77,17 +81,24 @@ export default function CpuPage() {
       </nav>
 
       {/* Pagination */}
-        <Pagination
-          totalPages={totalPages}
-        />
+      <Pagination totalPages={totalPages} />
 
-      <h1 className="text-2xl font-bold mb-5">Central Processing Unit (CPU)</h1>
+      {/* Bread Crumb */}
+      <BreadCrumbNavigation
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Components", href: "/Components" },
+          { name: "CPU" }, // Current page
+        ]}
+      />
 
       <section aria-label="cpu-list">
         {cpus.map((cpu, index) => (
           <Card
             key={index}
-            className="flex flex-col items-center md:flex-row gap-4 p-4 bg-white shadow-md border border-gray-200 hover:border-orange-600 my-3"
+            className="flex flex-col items-center my-4 md:flex-row gap-6 p-6
+    bg-white border border-gray-200 shadow-md
+    hover:border-orange-600 hover:shadow-lg hover:-translate-y-1 transform transition"
           >
             {/* CPU Image */}
             <div
@@ -125,7 +136,7 @@ export default function CpuPage() {
                 <div className="flex-1 min-w-[120px]">
                   <p className="text-gray-500">Processor Type</p>
                   <p className="font-semibold">
-                    {cpu.Name.match(/(Ryzen\s\d|Core\s\w\d)/i)}
+                    {cpu.Name.match(/(?:Ryzen\s\d|Core\s[im]\d)/i)}
                   </p>
                 </div>
                 <div className="flex-1 min-w-[120px]">
@@ -142,15 +153,20 @@ export default function CpuPage() {
                 </div>
                 <div className="flex-1 min-w-[120px]">
                   <p className="text-gray-500">L3 Cache</p>
-                  <p className="font-semibold">{cpu["L3 Cache"]} MB</p>
+                  <p className="font-semibold">{cpu["L3 Cache"]}</p>
                 </div>
               </CardContent>
 
               {/* View Details */}
-              <CardFooter className="justify-center md:justify-end">
+              <CardFooter className="justify-center md:justify-end mt-4">
                 <Link
                   href={`/components/${cpu.ID}`}
-                  className=" bg-orange-600 text-white px-2 py-1 rounded-sm hover:bg-orange-500"
+                  className="
+        bg-orange-600 text-white font-semibold px-4 py-2 rounded-md
+        hover:bg-orange-700 active:bg-orange-800
+        transition-colors
+        shadow-sm hover:shadow-md
+      "
                 >
                   View Details
                 </Link>
@@ -159,9 +175,7 @@ export default function CpuPage() {
           </Card>
         ))}
         {/* Pagination */}
-        <Pagination
-          totalPages={totalPages}
-        />
+        <Pagination totalPages={totalPages} />
       </section>
     </main>
   );

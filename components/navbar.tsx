@@ -1,104 +1,117 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { RiMenuFold2Fill } from "react-icons/ri";
+import { RiMenuFold2Fill, RiArrowDropDownLine } from "react-icons/ri";
 import { VscClose } from "react-icons/vsc";
 import { CiBookmark } from "react-icons/ci";
 import { FaStaylinked } from "react-icons/fa6";
-import { RiArrowDropDownLine } from "react-icons/ri";
 import { useState } from "react";
 
 export default function NavBar() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const baseLinkStyles =
+    "px-4 py-2 rounded-md text-sm font-medium transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-300";
 
   return (
-    <nav className="fixed top-0 z-50 bg-white flex justify-between px-5 items-center border-b h-15 w-full">
-      {/* Wide Screen Navigation */}
-      <Link href="/" className="hidden md:flex text-2xl font-bold">
-        PC
-        <FaStaylinked className="inline-block text-orange-500" />
-        <span className="text-orange-500">
-          Linker
-        </span>
-      </Link>
-      
-      <div className="hidden md:flex gap-4">
-        <Link href="/" className="navbtn">
-          Home
+    <nav className="fixed flex md:block top-0 w-full bg-white/95 backdrop-blur-md shadow-md z-50">
+      <div className="w-full flex items-center justify-between h-16 px-6">
+        {/* Logo */}
+        <Link href="/" className="hidden md:flex items-center space-x-1 text-2xl font-extrabold">
+          <span>PC</span>
+          <FaStaylinked className="text-orange-500" />
+          <span className="text-orange-500">Linker</span>
         </Link>
-        <Link href="/pc-selection" className="navbtn">
-          PC Selection
-        </Link>
-        <Link href="/pc-builder" className="navbtn">
-          PC Builder
-        </Link>
-        <div
-          onMouseEnter={() => setIsDropdownOpen(true)}
-          onMouseLeave={() => setIsDropdownOpen(false)}
-        >
-          <button
-            className="navbtn"
-            aria-label="toggle dropdown menu"
-            aria-expanded={isDropdownOpen}
-            aria-controls="dropdown-menu"
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center space-x-2">
+          <Link href="/" className={baseLinkStyles}>
+            Home
+          </Link>
+          <Link href="/pc-selection" className={baseLinkStyles}>
+            PC Selection
+          </Link>
+          <Link href="/pc-builder" className={baseLinkStyles}>
+            PC Builder
+          </Link>
+
+          {/* Components dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setDropdownOpen(true)}
+            onMouseLeave={() => setDropdownOpen(false)}
           >
-            Components
-            <RiArrowDropDownLine
-              className={`inline-block text-2xl ${
-                isDropdownOpen ? "rotate-180" : "rotate-0"
-              }`}
-            />
+            <button
+              className={`${baseLinkStyles} flex items-center`}
+              aria-haspopup="menu"
+              aria-expanded={dropdownOpen}
+            >
+              Components
+              <RiArrowDropDownLine
+                className={`ml-1 transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+            {dropdownOpen && (
+              <div className="absolute right-0 w-48 bg-white rounded-md shadow-lg ring-1 ring-black/5">
+                <Link
+                  href="/components/cpu"
+                  className="block px-4 py-2 text-sm hover:bg-gray-50"
+                >
+                  CPU
+                </Link>
+                <Link
+                  href="/components/gpu"
+                  className="block px-4 py-2 text-sm hover:bg-gray-50"
+                >
+                  GPU
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Mobile Hamburger + Bookmark */}
+        <div className="w-full md:w-auto flex items-center justify-between">
+          <button
+            className="md:hidden p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-300"
+            aria-label="Toggle menu"
+            onClick={() => setMobileOpen((o) => !o)}
+          >
+            {mobileOpen ? <VscClose /> : <RiMenuFold2Fill />}
           </button>
-          {isDropdownOpen && (
-            <div className="absolute bg-white rounded-sm shadow-lg border-1 p-2" id="dropdown-menu">
-              <Link href="/components/cpu" className="navbtn block" onClick={() => setIsDropdownOpen(false)}>
-                Central Processing Unit (CPU)
-              </Link>
-              <Link href="/components/gpu" className="navbtn block" onClick={() => setIsDropdownOpen(false)}>
-                Graphical Processing Unit (GPU)
-              </Link>
-            </div>
-          )}
+          <Link href="/bookmarks" aria-label="Bookmarks">
+            <CiBookmark className="text-2xl hover:text-orange-500 transition" />
+          </Link>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
-      <button
-        className="text-2xl cursor-pointer md:hidden navbtn active"
-        aria-label="toggle mobile menu"
-        aria-expanded={isMobileMenuOpen}
-        aria-controls="mobile-menu"
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-      >
-        {isMobileMenuOpen ? <VscClose /> : <RiMenuFold2Fill />}
-      </button>
-      {isMobileMenuOpen && (
-        <div
-          className="absolute top-16 left-0 bg-white w-full shadow-lg p-4"
-          id="mobile-menu"
-        >
-          <Link href="/" className="block py-2 hover:border-b-2" onClick={() => setIsMobileMenuOpen(false)}>
-            Home
-          </Link>
-          <Link href="/pc-selection" className="block py-2 hover:border-b-2" onClick={() => setIsMobileMenuOpen(false)}>
-            PC Selection
-          </Link>
-          <Link href="/pc-builder" className="block py-2 hover:border-b-2" onClick={() => setIsMobileMenuOpen(false)}>
-            PC Builder
-          </Link>
-          <Link href="/components/cpu" className="block py-2 hover:border-b-2" onClick={() => setIsMobileMenuOpen(false)}>
-            Central Processing Unit(CPU)
-          </Link>
-          <Link href="/components/gpu" className="block py-2 hover:border-b-2" onClick={() => setIsMobileMenuOpen(false)}>
-            Graphical Processing Unit(GPU)
-          </Link>
+      {/* Mobile Menu */}
+      {mobileOpen && (
+        <div className="md:hidden bg-white shadow-inner">
+          <div className="flex flex-col space-y-1 px-4 py-3">
+            {["Home", "PC Selection", "PC Builder", "CPU", "GPU"].map((label) => {
+              const href = label === "Home"
+                ? "/"
+                : label === "CPU"
+                ? "/components/cpu"
+                : label === "GPU"
+                ? "/components/gpu"
+                : `/${label.toLowerCase().replace(" ", "-")}`;
+              return (
+                <Link
+                  key={label}
+                  href={href}
+                  className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {label}
+                </Link>
+              );
+            })}
+          </div>
         </div>
       )}
-      <Link href="/bookmarks" className="" aria-label="bookmarks">
-        <CiBookmark className="text-2xl hover:text-orange-500" />
-      </Link>
     </nav>
   );
 }
