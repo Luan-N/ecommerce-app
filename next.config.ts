@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
       "i.ebayimg.com", "i5.walmartimages.com", "cdn11.bigcommerce.com"],
     
   },
+  //reactStrictMode: false,
 };
 
 export default nextConfig;
