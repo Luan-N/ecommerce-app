@@ -42,14 +42,14 @@ export async function GET(request: Request) {
     }
 
     let filteredItems = cachedCPUItems;//all
-    
-    if(manfParam == "amd")
+
+    if (manfParam == "amd")
       filteredItems = cachedCPUItems.filter(item => item.Name.toLowerCase().includes('ryzen'));//amd/ryzen
-    else if (manfParam == "intel") 
+    else if (manfParam == "intel")
       filteredItems = cachedCPUItems.filter(item => item.Name.toLowerCase().includes('intel'));//intel
 
     const finalData = {
-      items: filteredItems.slice((pageParam - 1)*limit, pageParam * limit),
+      items: filteredItems.slice((pageParam - 1) * limit, pageParam * limit),
       totalPages: Math.ceil(filteredItems.length / limit), // Calculate total pages based on the limit
     }
 
@@ -60,3 +60,4 @@ export async function GET(request: Request) {
   }
 
 }
+

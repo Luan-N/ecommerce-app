@@ -6,13 +6,14 @@ import { VscClose } from "react-icons/vsc";
 import { CiBookmark } from "react-icons/ci";
 import { FaStaylinked } from "react-icons/fa6";
 import { useState } from "react";
+import SearchBar from "@/components/search-bar";
 
 export default function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const baseLinkStyles =
-    "px-4 py-2 rounded-md text-sm font-medium transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-300";
+    "px-4 py-2 rounded-md text-sm font-medium transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-300";
 
   return (
     <nav className="fixed md:block top-0 w-full bg-white/95 backdrop-blur-md shadow-md z-50">
@@ -80,8 +81,12 @@ export default function NavBar() {
           >
             {mobileOpen ? <VscClose className="text-xl"/> : <RiMenuFold2Fill className="text-xl"/>}
           </button>
+
+          <SearchBar/>
+
+
           <Link href="/bookmarks" aria-label="Bookmarks">
-            <CiBookmark className="text-2xl hover:text-orange-500 transition" />
+            <CiBookmark className="text-2xl hover:text-orange-500 transition-colors" />
           </Link>
         </div>
       </div>

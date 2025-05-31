@@ -28,21 +28,19 @@ export default function CpuPage() {
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    async function fetchCpus() {
-      console.log(
-        "Fetching CPUs with params:" + manfParam + " page: " + pageParam
-      );
-      const res = await fetch(`/api/cpu?manf=${manfParam}&page=${pageParam}`);
-      if (!res.ok) {
-        const errorData = await res.json();
-        console.error("Error:", errorData.error || "Unknown error");
-        return;
+    async function fetchCPUs() {
+      console.log("Fetching CPUs with params:" + manfParam + " page: " + pageParam);
+      try{
+        const res = await fetch(`/api/cpu?manf=${manfParam}&page=${pageParam}`);
+        const data = await res.json();
+        setCpus(data.items);
+        setTotalPages(data.totalPages);
       }
-      const data = await res.json();
-      setCpus(data.items);
-      setTotalPages(data.totalPages);
+      catch (error) {
+        console.error("Error fetching CPUs:", error);
+      }
     }
-    fetchCpus();
+    fetchCPUs();
   }, [manfParam, pageParam]);
 
   return (

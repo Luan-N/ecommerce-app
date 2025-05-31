@@ -45,13 +45,13 @@ export default function Home() {
     <div className="flex flex-wrap gap-4">
       <Link
         href="/pc-building"
-        className="inline-block px-5 py-2 rounded-lg bg-orange-600 text-white font-medium hover:bg-orange-500 transition"
+        className="inline-block px-5 py-2 rounded-lg bg-orange-600 text-white font-medium hover:bg-orange-500 transition-colors"
       >
         Start Building
       </Link>
       <Link
         href="/components"
-        className="inline-block px-5 py-2 rounded-lg border-2 border-orange-600 text-orange-600 font-medium hover:bg-orange-100 transition"
+        className="inline-block px-5 py-2 rounded-lg border-2 border-orange-600 text-orange-600 font-medium hover:bg-orange-100 transition-colors"
       >
         Browse Components
       </Link>
@@ -108,7 +108,7 @@ export default function Home() {
       <p className="my-4 text-2xl font-bold text-orange-600">
         ~ $1,199.99
       </p>
- <button className="mt-auto w-full px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-500 transition cursor-pointer">
+ <button className="mt-auto w-full px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-500 transition-colors cursor-pointer">
       View Details
     </button>
     </div>

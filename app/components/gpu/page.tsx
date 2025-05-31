@@ -27,7 +27,7 @@ export default function CpuPage() {
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    async function fetchCpus() {
+    async function fetchGPUs() {
       console.log(
         "Fetching GPUs with params:" + manfParam + " page: " + pageParam
       );
@@ -41,7 +41,7 @@ export default function CpuPage() {
       setGpus(data.items);
       setTotalPages(data.totalPages);
     }
-    fetchCpus();
+    fetchGPUs();
   }, [manfParam, pageParam]);
 
   return (

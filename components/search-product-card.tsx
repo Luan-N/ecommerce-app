@@ -24,7 +24,7 @@ export default function SearchProductCard({ product }: SearchProductCardProps) {
     <Card
       className="flex flex-col items-center my-4 md:flex-row gap-6 p-6
     bg-white border border-gray-200 shadow-md
-    hover:border-orange-600 hover:shadow-lg hover:-translate-y-1 transform transition"
+    hover:border-orange-600 hover:shadow-lg hover:-translate-y-1 transform transition-colors"
     >
       {/* CPU Image */}
       <div

@@ -41,14 +41,14 @@ export async function GET(request: Request) {
     }
 
     let filteredItems = cachedGPUItems;//all
-    
-    if(manfParam == "nvidia")
+
+    if (manfParam == "nvidia")
       filteredItems = cachedGPUItems.filter(item => item.Name.toLowerCase().includes('nvidia'));//nvidia
-    else if (manfParam == "amd") 
+    else if (manfParam == "amd")
       filteredItems = cachedGPUItems.filter(item => item.Name.toLowerCase().includes('amd'));//amd
 
     const finalData = {
-      items: filteredItems.slice((pageParam - 1)*limit, pageParam * limit),
+      items: filteredItems.slice((pageParam - 1) * limit, pageParam * limit),
       totalPages: Math.ceil(filteredItems.length / limit), // Calculate total pages based on the limit
     }
 
