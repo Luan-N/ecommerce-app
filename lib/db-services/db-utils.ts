@@ -11,6 +11,15 @@ export type CPUIndexItem = {
   "Image URL": string;
 };
 
+export type GPUIndexItem = {
+  ID: string;
+  Name: string;
+  "Memory Size": string;
+  "Memory Type": string;
+  "Boost Clock": string;
+  "Image URL": string;
+};
+
 export function paginateItems<T>(items: T[], page: number, itemsPerPage: number): { paginatedItems: T[]; totalPages: number } {
   const startIndex = (page - 1) * itemsPerPage;
   const paginatedItems = items.slice(startIndex, startIndex + itemsPerPage);

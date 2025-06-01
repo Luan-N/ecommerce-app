@@ -1,19 +1,6 @@
 import { NextResponse } from 'next/server';
-import { paginateItems, fetchFirestoreDocument } from '@/lib/db-services/db-utils'; // Assuming db-utils is in this path
+import { paginateItems, fetchFirestoreDocument, GPUIndexItem } from '@/lib/db-services/db-utils'; // Assuming db-utils is in this path
 
-// --- Types ---
-type GPUIndexItem = {
-  ID: string;
-  Name: string;
-  "Memory Size": string;
-  "Memory Type": string;
-  "Boost Clock": string;
-  "Image URL": string;
-};
-
-type GpuIndexDocument = {
-  Items?: GPUIndexItem[];
-};
 
 // --- Constants ---
 const ITEMS_PER_PAGE = 20;
@@ -35,7 +22,7 @@ async function getGPUItems(currentTime: number): Promise<GPUIndexItem[]> {
 
   if (isCacheStale || !gpuItemsCache) {
     console.log("Attempting to fetch GPU data from Firestore.");
-    const data = await fetchFirestoreDocument<GpuIndexDocument>('search-index', 'gpu-index');
+    const data = await fetchFirestoreDocument<{ Items: GPUIndexItem[] }>('search-index', 'gpu-index');
     
     gpuItemsCache = data?.Items || []; 
     

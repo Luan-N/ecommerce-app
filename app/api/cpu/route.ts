@@ -1,18 +1,6 @@
 import { NextResponse } from 'next/server';
-import { paginateItems, fetchFirestoreDocument } from '@/lib/db-services/db-utils';
+import { paginateItems, fetchFirestoreDocument, CPUIndexItem } from '@/lib/db-services/db-utils';
 
-// --- Types ---
-type CPUIndexItem = {
-  ID: string;
-  Name: string;
-  Cores: number;
-  Threads: number;
-  'Boost Clock Frequency': string;
-  'L3 Cache': string;
-  "Image URL": string;
-};
-
-type CpuIndexDocument = { Items: CPUIndexItem[] };
 
 // --- Constants ---
 const ITEMS_PER_PAGE = 20;
@@ -34,7 +22,7 @@ async function getCPUItems(currentTime: number): Promise<CPUIndexItem[]> {
   // Refetch if cache is stale or if the cache is not populated for some reason
   if (isCacheStale || !cpuItemsCache) {
 
-    const data = await fetchFirestoreDocument<CpuIndexDocument>('search-index', 'cpu-index');
+    const data = await fetchFirestoreDocument<{Items: CPUIndexItem[]}>('search-index', 'cpu-index');
     cpuItemsCache = data?.Items || [];
 
     cacheLastUpdated = currentTime; // Update timestamp only on successful fetch
