@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
+import { paginateItems, fetchFirestoreDocument } from '@/lib/db-services/db-utils';
 
-import { db } from '@/lib/firestore-db';
-
+// --- Types ---
 type CPUIndexItem = {
   ID: string;
   Name: string;
@@ -12,52 +12,77 @@ type CPUIndexItem = {
   "Image URL": string;
 };
 
-let cachedCPUItems: CPUIndexItem[] | null = null;
-let cachedAt: number | null = null;
+type CpuIndexDocument = { Items: CPUIndexItem[] };
+
+// --- Constants ---
+const ITEMS_PER_PAGE = 20;
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
+const MANUFACTURER_FILTER_KEYWORDS: Record<string, string | undefined> = {
+  amd: 'ryzen',
+  intel: 'intel',
+};
 
-  const manfParam = searchParams.get('manf');
-  let pageParam = Number(searchParams.get("page")) || 1; // Default to page 1 if not provided
+// --- Cache State ---
+let cpuItemsCache: CPUIndexItem[] | null = null;
+let cacheLastUpdated: number | null = null;
 
-  const limit = 20; // Default limit for the number of items to return
-  const now = Date.now(); // curent time in milliseconds
+// --- Helper Functions ---
+async function getCPUItems(currentTime: number): Promise<CPUIndexItem[]> {
+  const isCacheStale = !cacheLastUpdated || (currentTime - cacheLastUpdated > CACHE_TTL_MS);
 
-  try {
-    const shouldRefetch = (!cachedAt || now - cachedAt > CACHE_TTL_MS);
+  // Refetch if cache is stale or if the cache is not populated for some reason
+  if (isCacheStale || !cpuItemsCache) {
 
-    if (shouldRefetch || !cachedCPUItems) {
-      const docRef = db.collection('search-index').doc('cpu-index');
-      const docSnap = await docRef.get();
-      const data = docSnap.data();
+    const data = await fetchFirestoreDocument<CpuIndexDocument>('search-index', 'cpu-index');
+    cpuItemsCache = data?.Items || [];
 
-      cachedCPUItems = data?.Items as CPUIndexItem[] || [];
-      cachedAt = now;
-
-      console.log("📡 Refetched CPU data from Firestore.");
-    } else {
-      console.log("✅ Using cached CPU data.");
-    }
-
-    let filteredItems = cachedCPUItems;//all
-
-    if (manfParam == "amd")
-      filteredItems = cachedCPUItems.filter(item => item.Name.toLowerCase().includes('ryzen'));//amd/ryzen
-    else if (manfParam == "intel")
-      filteredItems = cachedCPUItems.filter(item => item.Name.toLowerCase().includes('intel'));//intel
-
-    const finalData = {
-      items: filteredItems.slice((pageParam - 1) * limit, pageParam * limit),
-      totalPages: Math.ceil(filteredItems.length / limit), // Calculate total pages based on the limit
-    }
-
-    return NextResponse.json(finalData);//return paginated results
-
-  } catch (error) {
-    return NextResponse.json({ error: 'Document not found' }, { status: 404 });
+    cacheLastUpdated = currentTime; // Update timestamp only on successful fetch
+    console.log("✅ CPU data fetched/refreshed and cached.");
+  } else {
+    console.log("✅ Using cached CPU data.");
   }
-
+  return cpuItemsCache;
 }
 
+function filterItemsByManufacturer(items: CPUIndexItem[], manufacturer: string | null): CPUIndexItem[] {
+  if (!manufacturer) 
+    return items;
+  
+  const lowerManf = manufacturer.toLowerCase();
+  const filterKeyword = MANUFACTURER_FILTER_KEYWORDS[lowerManf];
+
+  if (filterKeyword) 
+    return items.filter(item => item.Name.toLowerCase().includes(filterKeyword));
+
+  return items;
+}
+
+// --- Main GET Handler ---
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const manufacturerParam = searchParams.get('manf');
+
+  const pageParam = Math.max(1, Number(searchParams.get("page")) || 1);
+  const currentTime = Date.now();
+
+  try {
+    const allCpuItems = await getCPUItems(currentTime);
+
+    const filteredItems = filterItemsByManufacturer(allCpuItems, manufacturerParam);
+
+    const { paginatedItems, totalPages } = paginateItems(filteredItems, pageParam, ITEMS_PER_PAGE);
+
+    const responseData = {
+      items: paginatedItems,
+      totalPages: totalPages,
+      currentPage: pageParam, // Optionally include current page in response
+    };
+
+    return NextResponse.json(responseData);
+
+  } catch (error: any) {
+    console.error("Error in GET CPU items API:", error.message, error.stack);
+    return NextResponse.json({ error: 'Failed to retrieve CPU data. Please try again later.' }, { status: 500 });
+  }
+}

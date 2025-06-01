@@ -22,14 +22,12 @@ export default function SearchBar() {
     }
 
     async function fetchResults() {
-      console.log("Fetching search results for query:", query, "live");
       try {
         const res = await fetch(
-          `/api/search?query=${encodeURIComponent(query)}`
+          `/api/live-search?query=${encodeURIComponent(query)}`
         );
         const data = await res.json();
         setResults(data);
-        console.log("Search results:", data);
       } catch (err) {
         console.error("Error fetching search results:", err);
       }

@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
+import { paginateItems, fetchFirestoreDocument } from '@/lib/db-services/db-utils'; // Assuming db-utils is in this path
 
-import { db } from '@/lib/firestore-db';
-
-type GPUIndexSchema = {
+// --- Types ---
+type GPUIndexItem = {
   ID: string;
   Name: string;
   "Memory Size": string;
@@ -11,51 +11,80 @@ type GPUIndexSchema = {
   "Image URL": string;
 };
 
-let cachedGPUItems: GPUIndexSchema[] | null = null;
-let cachedAt: number | null = null;
+type GpuIndexDocument = {
+  Items?: GPUIndexItem[];
+};
+
+// --- Constants ---
+const ITEMS_PER_PAGE = 20;
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
+const MANUFACTURER_FILTER_KEYWORDS: Record<string, string | undefined> = {
+  nvidia: 'nvidia',
+  amd: 'amd',
+  intel: 'intel',
+};
 
-  const manfParam = searchParams.get('manf');
-  let pageParam = Number(searchParams.get("page")) || 1; // Default to page 1 if not provided
+// --- Cache State ---
+let gpuItemsCache: GPUIndexItem[] | null = null;
+let cacheLastUpdated: number | null = null; //
 
-  const limit = 20; // Default limit for the number of items to return
-  const now = Date.now(); // curent time in milliseconds
+// --- Helper Functions ---
+async function getGPUItems(currentTime: number): Promise<GPUIndexItem[]> {
+  const isCacheStale = !cacheLastUpdated || (currentTime - cacheLastUpdated > CACHE_TTL_MS);
 
-  try {
-    const shouldRefetch = (!cachedAt || now - cachedAt > CACHE_TTL_MS);
+  if (isCacheStale || !gpuItemsCache) {
+    console.log("Attempting to fetch GPU data from Firestore.");
+    const data = await fetchFirestoreDocument<GpuIndexDocument>('search-index', 'gpu-index');
+    
+    gpuItemsCache = data?.Items || []; 
+    
+    cacheLastUpdated = currentTime; // Update timestamp only on successful fetch or attempt
+    console.log(`✅ GPU data fetched/refreshed. Cache updated. Items count: ${gpuItemsCache.length}`);
+  } else {
+    console.log("✅ Using cached GPU data.");
+  }
+  return gpuItemsCache;
+}
 
-    if (shouldRefetch || !cachedGPUItems) {
-      const docRef = db.collection('search-index').doc('gpu-index');
-      const docSnap = await docRef.get();
-      const data = docSnap.data();
+function filterItemsByManufacturer(items: GPUIndexItem[], manufacturer: string | null): GPUIndexItem[] {
+  if (!manufacturer) {
+    return items;
+  }
+  
+  const lowerManf = manufacturer.toLowerCase();
+  const filterKeyword = MANUFACTURER_FILTER_KEYWORDS[lowerManf];
 
-      cachedGPUItems = data?.Items as GPUIndexSchema[] || [];
-      cachedAt = now;
-
-      console.log("📡 Refetched GPU data from Firestore.");
-    } else {
-      console.log("✅ Using cached GPU data.");
-    }
-
-    let filteredItems = cachedGPUItems;//all
-
-    if (manfParam == "nvidia")
-      filteredItems = cachedGPUItems.filter(item => item.Name.toLowerCase().includes('nvidia'));//nvidia
-    else if (manfParam == "amd")
-      filteredItems = cachedGPUItems.filter(item => item.Name.toLowerCase().includes('amd'));//amd
-
-    const finalData = {
-      items: filteredItems.slice((pageParam - 1) * limit, pageParam * limit),
-      totalPages: Math.ceil(filteredItems.length / limit), // Calculate total pages based on the limit
-    }
-
-    return NextResponse.json(finalData);//return paginated results
-
-  } catch (error) {
-    return NextResponse.json({ error: 'Document not found' }, { status: 404 });
+  if (filterKeyword) {
+    return items.filter(item => item.Name.toLowerCase().includes(filterKeyword));
   }
 
+  return items; 
+}
+
+// --- Main GET Handler ---
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const manufacturerParam = searchParams.get('manf');
+  const pageParam = Math.max(1, Number(searchParams.get("page")) || 1);
+  const currentTime = Date.now();
+
+  try {
+    const allGpuItems = await getGPUItems(currentTime);
+
+    const filteredItems = filterItemsByManufacturer(allGpuItems, manufacturerParam);
+    const { paginatedItems, totalPages } = paginateItems(filteredItems, pageParam, ITEMS_PER_PAGE);
+
+    const responseData = {
+      items: paginatedItems,
+      totalPages: totalPages,
+      currentPage: pageParam,
+    };
+
+    return NextResponse.json(responseData);
+
+  } catch (error: any) {
+    console.error("Error in GET GPU items API:", error.message, error.stack); 
+    return NextResponse.json({ error: 'Failed to retrieve GPU data. Please try again later.' }, { status: 500 });
+  }
 }

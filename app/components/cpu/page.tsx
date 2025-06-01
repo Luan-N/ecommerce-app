@@ -29,7 +29,6 @@ export default function CpuPage() {
 
   useEffect(() => {
     async function fetchCPUs() {
-      console.log("Fetching CPUs with params:" + manfParam + " page: " + pageParam);
       try{
         const res = await fetch(`/api/cpu?manf=${manfParam}&page=${pageParam}`);
         const data = await res.json();

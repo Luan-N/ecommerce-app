@@ -16,7 +16,6 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function Home() {
-  console.log("Rendering Home Page");
   return (
     <>
       <section

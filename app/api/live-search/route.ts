@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/firestore-db";
+import { db } from "@/lib/db-services/firestore-db";
 
 type ProductSchema = {
   ID: string;
@@ -45,14 +45,14 @@ export async function GET(req: NextRequest) {
 
   try {
     if (!shouldRefetch && cached) {
-      console.log("⚡ Serving from cache");
+      console.log("⚡ Serving search data from cache");
       const filtered = cached.filter((item) =>
         item.Name.toLowerCase().includes(query.toLowerCase())
       );
       return NextResponse.json(filtered.slice(0, limit));
     }
 
-    console.log("📡 Fetching new data from Firestore");
+    console.log("📡 Fetching search data from Firestore");
 
     const cpuDocRef = db.collection("search-index").doc("cpu-index");
     const gpuDocRef = db.collection("search-index").doc("gpu-index");
@@ -72,8 +72,12 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const cpuItems: ProductSchema[] = (cpuData?.Items || []).map(mapCPUItemToProductSchema);
-    const gpuItems: ProductSchema[] = (gpuData?.Items || []).map(mapGPUItemToProductSchema);
+    const cpuItems: ProductSchema[] = (cpuData?.Items || []).map(
+      mapCPUItemToProductSchema
+    );
+    const gpuItems: ProductSchema[] = (gpuData?.Items || []).map(
+      mapGPUItemToProductSchema
+    );
 
     const combinedItems = [...cpuItems, ...gpuItems];
 
@@ -95,9 +99,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-
 function mapCPUItemToProductSchema(item: CPUIndexItem): ProductSchema {
-
   const Description: [string, string][] = [
     ["Cores", item.Cores.toString()],
     ["Threads", item.Threads.toString()],
@@ -127,4 +129,3 @@ function mapGPUItemToProductSchema(item: GPUIndexItem): ProductSchema {
     "Image URL": item["Image URL"],
   };
 }
-

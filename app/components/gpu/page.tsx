@@ -28,9 +28,6 @@ export default function CpuPage() {
 
   useEffect(() => {
     async function fetchGPUs() {
-      console.log(
-        "Fetching GPUs with params:" + manfParam + " page: " + pageParam
-      );
       const res = await fetch(`/api/gpu?manf=${manfParam}&page=${pageParam}`);
       if (!res.ok) {
         const errorData = await res.json();
