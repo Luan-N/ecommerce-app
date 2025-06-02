@@ -68,6 +68,7 @@ export default function CpuPage() {
         ]}
       />
 
+      {/* CPU List */}
       <section aria-label="cpu-list">
         {cpus.map((cpu) => (
           <SearchProductCard

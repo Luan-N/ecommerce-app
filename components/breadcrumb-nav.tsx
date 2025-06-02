@@ -21,7 +21,7 @@ type BreadcrumbNavProps = {
 
 export default function BreadcrumbNav({ items }: BreadcrumbNavProps) {
   return (
-    <Breadcrumb>
+    <Breadcrumb className="my-4">
       <BreadcrumbList>
         {items.map((item, index) => (
           <React.Fragment key={index}>
