@@ -57,13 +57,13 @@ export default function NavBar() {
               <div className="absolute right-0 w-48 bg-white rounded-md shadow-lg ring-1 ring-black/5">
                 <Link
                   href="/components/cpu"
-                  className="block px-4 py-2 text-sm hover:bg-gray-50"
+                  className="block px-4 py-2 text-sm hover:bg-gray-50 rounded-t-md"
                 >
                   CPU
                 </Link>
                 <Link
                   href="/components/gpu"
-                  className="block px-4 py-2 text-sm hover:bg-gray-50"
+                  className="block px-4 py-2 text-sm hover:bg-gray-50 rounded-b-md"
                 >
                   GPU
                 </Link>
