@@ -6,11 +6,11 @@ import { paginateItems, fetchFirestoreDocument, GPUIndexItem } from '@/lib/db-se
 const ITEMS_PER_PAGE = 20;
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
-const MANUFACTURER_FILTER_KEYWORDS: Record<string, string | undefined> = {
-  nvidia: 'nvidia',
-  amd: 'amd',
-  intel: 'intel',
-};
+// const MANUFACTURER_FILTER_KEYWORDS: Record<string, string | undefined> = {
+//   nvidia: 'nvidia',
+//   amd: 'amd',
+//   intel: 'intel',
+// };
 
 // --- Cache State ---
 let gpuItemsCache: GPUIndexItem[] | null = null;
@@ -23,9 +23,9 @@ async function getGPUItems(currentTime: number): Promise<GPUIndexItem[]> {
   if (isCacheStale || !gpuItemsCache) {
     console.log("Attempting to fetch GPU data from Firestore.");
     const data = await fetchFirestoreDocument<{ Items: GPUIndexItem[] }>('search-index', 'gpu-index');
-    
-    gpuItemsCache = data?.Items || []; 
-    
+
+    gpuItemsCache = data?.Items || [];
+
     cacheLastUpdated = currentTime; // Update timestamp only on successful fetch or attempt
     console.log(`✅ GPU data fetched/refreshed. Cache updated. Items count: ${gpuItemsCache.length}`);
   } else {
@@ -34,32 +34,17 @@ async function getGPUItems(currentTime: number): Promise<GPUIndexItem[]> {
   return gpuItemsCache;
 }
 
-function filterItemsByManufacturer(items: GPUIndexItem[], manufacturer: string | null): GPUIndexItem[] {
-  if (!manufacturer) {
-    return items;
-  }
-  
-  const lowerManf = manufacturer.toLowerCase();
-  const filterKeyword = MANUFACTURER_FILTER_KEYWORDS[lowerManf];
-
-  if (filterKeyword) {
-    return items.filter(item => item.Name.toLowerCase().includes(filterKeyword));
-  }
-
-  return items; 
-}
-
 // --- Main GET Handler ---
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const manufacturerParam = searchParams.get('manf');
+  const manufacturerParam = searchParams.get('manf') || 'all';
   const pageParam = Math.max(1, Number(searchParams.get("page")) || 1);
   const currentTime = Date.now();
 
   try {
     const allGpuItems = await getGPUItems(currentTime);
 
-    const filteredItems = filterItemsByManufacturer(allGpuItems, manufacturerParam);
+    const filteredItems = manufacturerParam == 'all'? allGpuItems : allGpuItems.filter(item => item.Name.toLowerCase().includes(manufacturerParam));
     const { paginatedItems, totalPages } = paginateItems(filteredItems, pageParam, ITEMS_PER_PAGE);
 
     const responseData = {
@@ -71,7 +56,7 @@ export async function GET(request: Request) {
     return NextResponse.json(responseData);
 
   } catch (error: any) {
-    console.error("Error in GET GPU items API:", error.message, error.stack); 
+    console.error("Error in GET GPU items API:", error.message, error.stack);
     return NextResponse.json({ error: 'Failed to retrieve GPU data. Please try again later.' }, { status: 500 });
   }
 }

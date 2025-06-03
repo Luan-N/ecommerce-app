@@ -6,11 +6,6 @@ import { paginateItems, fetchFirestoreDocument, CPUIndexItem } from '@/lib/db-se
 const ITEMS_PER_PAGE = 20;
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
-const MANUFACTURER_FILTER_KEYWORDS: Record<string, string | undefined> = {
-  amd: 'ryzen',
-  intel: 'intel',
-};
-
 // --- Cache State ---
 let cpuItemsCache: CPUIndexItem[] | null = null;
 let cacheLastUpdated: number | null = null;
@@ -33,23 +28,10 @@ async function getCPUItems(currentTime: number): Promise<CPUIndexItem[]> {
   return cpuItemsCache;
 }
 
-function filterItemsByManufacturer(items: CPUIndexItem[], manufacturer: string | null): CPUIndexItem[] {
-  if (!manufacturer) 
-    return items;
-  
-  const lowerManf = manufacturer.toLowerCase();
-  const filterKeyword = MANUFACTURER_FILTER_KEYWORDS[lowerManf];
-
-  if (filterKeyword) 
-    return items.filter(item => item.Name.toLowerCase().includes(filterKeyword));
-
-  return items;
-}
-
 // --- Main GET Handler ---
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const manufacturerParam = searchParams.get('manf');
+  const manufacturerParam = searchParams.get('manf') || 'all';
 
   const pageParam = Math.max(1, Number(searchParams.get("page")) || 1);
   const currentTime = Date.now();
@@ -57,7 +39,11 @@ export async function GET(request: Request) {
   try {
     const allCpuItems = await getCPUItems(currentTime);
 
-    const filteredItems = filterItemsByManufacturer(allCpuItems, manufacturerParam);
+    console.log(`🔍 Fetching CPU items for manufacturer: ${manufacturerParam}, page: ${pageParam}`);
+
+    const filteredItems = manufacturerParam == 'all' ? allCpuItems : allCpuItems.filter(item => item.Name.toLowerCase().includes(manufacturerParam));
+
+    console.log(`📦 Filtered items: ${filteredItems}`);
 
     const { paginatedItems, totalPages } = paginateItems(filteredItems, pageParam, ITEMS_PER_PAGE);
 
