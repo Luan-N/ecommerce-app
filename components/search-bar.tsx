@@ -120,6 +120,7 @@ export default function SearchBar() {
             >
               <Link
                 href={`/components/${item.type}/${item.ID}`}
+                onClick={() => setQuery("")} // Clear the input when navigating
                 className="flex items-center space-x-3 group"
               >
                 <img
