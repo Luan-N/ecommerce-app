@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { CiSearch } from "react-icons/ci";
 
 type ProductSchema = {
+  type: string; // 'cpu' or 'gpu'
   ID: string;
   Name: string;
   Description: [string, string][];
@@ -118,7 +119,7 @@ export default function SearchBar() {
               className="flex items-center space-x-3 p-2 border rounded bg-white shadow-sm h-16"
             >
               <Link
-                href={`/components/${item.ID}`}
+                href={`/components/${item.type}/${item.ID}`}
                 className="flex items-center space-x-3 group"
               >
                 <img

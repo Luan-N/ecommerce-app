@@ -3,6 +3,7 @@ import { fetchFirestoreDocument, CPUIndexItem, GPUIndexItem } from "@/lib/db-ser
 
 // --- Types ---
 type ProductSchema = {
+  type: string; // 'cpu' or 'gpu'
   ID: string;
   Name: string;
   Description: [string, string][];
@@ -26,6 +27,7 @@ function mapCPUItemToProductSchema(item: CPUIndexItem): ProductSchema {
     ["L3 Cache", item["L3 Cache"]],
   ];
   return {
+    type: "cpu",
     ID: item.ID,
     Name: item.Name,
     Description: description,
@@ -40,6 +42,7 @@ function mapGPUItemToProductSchema(item: GPUIndexItem): ProductSchema {
     ["Boost Clock", item["Boost Clock"]],
   ];
   return {
+    type: "gpu",
     ID: item.ID,
     Name: item.Name,
     Description: description,

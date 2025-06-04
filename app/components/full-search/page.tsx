@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 import BreadCrumbNavigation from "@/components/breadcrumb-nav";
 import Pagination from "@/components/pagination";
 import SearchProductCard from "@/components/search-product-card";
-import ComponentFilter from "@/components/component-filter";
 
 type productSchema = {
+  type: string;
   ID: string;
   Name: string;
   Description: [string, string][];

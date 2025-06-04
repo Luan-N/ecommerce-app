@@ -74,6 +74,7 @@ export default function CpuPage() {
           <SearchProductCard
             key={cpu.ID}
             product={{
+              type: "cpu",
               ID: cpu.ID,
               Name: `${cpu.Name} ${cpu.Cores}C/${cpu.Threads}T ${cpu["Boost Clock Frequency"]} Mhz Processor Speed ${cpu["L3 Cache"]} L3 Cache`,
               Description: [

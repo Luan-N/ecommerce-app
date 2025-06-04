@@ -9,6 +9,7 @@ import {
 import Image from "next/image";
 
 type Product = {
+  type: string;
   ID: string;
   Name: string;
   Description: [string, string][];
@@ -31,7 +32,7 @@ export default function SearchProductCard({ product }: SearchProductCardProps) {
         className="w-auto md:w-[150px] md:min-w-[150px] h-auto md:h-[150px] "
         aria-label="cpu-image"
       >
-        <Link href={`/components/${product.ID}`}>
+        <Link href={`/components/${product.type}/${product.ID}`}>
           <Image
             src={product["Image URL"]}
             alt={product.Name}
@@ -48,7 +49,7 @@ export default function SearchProductCard({ product }: SearchProductCardProps) {
         <CardHeader>
           <CardTitle className="text-lg font-semibold">
             <Link
-              href={`/components/${product.ID}`}
+              href={`/components/${product.type}/${product.ID}`}
               className="hover:text-orange-600"
             >
               {product.Name}
@@ -68,7 +69,7 @@ export default function SearchProductCard({ product }: SearchProductCardProps) {
         {/* View Details */}
         <CardFooter className="justify-center md:justify-end mt-4">
           <Link
-            href={`/components/${product.ID}`}
+            href={`/components/${product.type}/${product.ID}`}
             className="
         bg-orange-600 text-white font-semibold px-4 py-2 rounded-md
         hover:bg-orange-700 active:bg-orange-800

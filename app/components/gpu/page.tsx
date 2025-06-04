@@ -73,6 +73,7 @@ export default function CpuPage() {
           <SearchProductCard
             key={gpu.ID}
             product={{
+              type: "gpu",
               ID: gpu.ID,
               Name: `${gpu.Name} ${gpu["Memory Size"]} ${gpu["Memory Type"]} ${gpu["Boost Clock"]} Boost Clock`,
               Description: [
