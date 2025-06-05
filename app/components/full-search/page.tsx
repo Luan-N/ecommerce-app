@@ -35,7 +35,6 @@ export default function FullSearchPage() {
         const data = await res.json();
         setProducts(data.items || []);
         setTotalPages(data.totalPages || 0);
-        console.log("Search results fetched:", data.items);
       } catch (error) {
         console.error("Error fetching search results:", error);
       }

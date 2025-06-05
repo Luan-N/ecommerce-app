@@ -62,11 +62,11 @@ async function getSearchableProducts(
     !cacheLastUpdated || currentTime - cacheLastUpdated > CACHE_TTL_MS;
 
   if (!isCacheStale && cachedProducts) {
-    console.log("⚡ Serving product data from cache");
+    console.log("⚡ Serving cpu/gpu search data from cache");
     return cachedProducts;
   }
 
-  console.log("📡 Fetching product data from Firestore");
+  console.log("📡 Fetching cpu/gpu search data from Firestore");
 
   const [cpuIndexDoc, gpuIndexDoc] = await Promise.all([
     fetchFirestoreDocument<{ Items: CPUIndexItem[] }>(

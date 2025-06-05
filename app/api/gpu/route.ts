@@ -21,15 +21,14 @@ async function getGPUItems(currentTime: number): Promise<GPUIndexItem[]> {
   const isCacheStale = !cacheLastUpdated || (currentTime - cacheLastUpdated > CACHE_TTL_MS);
 
   if (isCacheStale || !gpuItemsCache) {
-    console.log("Attempting to fetch GPU data from Firestore.");
     const data = await fetchFirestoreDocument<{ Items: GPUIndexItem[] }>('search-index', 'gpu-index');
 
     gpuItemsCache = data?.Items || [];
 
     cacheLastUpdated = currentTime; // Update timestamp only on successful fetch or attempt
-    console.log(`✅ GPU data fetched/refreshed. Cache updated. Items count: ${gpuItemsCache.length}`);
+    console.log("✅ GPU search data fetched and cached.");
   } else {
-    console.log("✅ Using cached GPU data.");
+    console.log("✅ Using gpu search data cache.");
   }
   return gpuItemsCache;
 }

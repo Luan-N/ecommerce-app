@@ -21,9 +21,9 @@ async function getCPUItems(currentTime: number): Promise<CPUIndexItem[]> {
     cpuItemsCache = data?.Items || [];
 
     cacheLastUpdated = currentTime; // Update timestamp only on successful fetch
-    console.log("✅ CPU data fetched/refreshed and cached.");
+    console.log("✅ CPU search data fetched and cached.");
   } else {
-    console.log("✅ Using cached CPU data.");
+    console.log("✅ Using CPU search data cache.");
   }
   return cpuItemsCache;
 }
@@ -39,11 +39,7 @@ export async function GET(request: Request) {
   try {
     const allCpuItems = await getCPUItems(currentTime);
 
-    console.log(`🔍 Fetching CPU items for manufacturer: ${manufacturerParam}, page: ${pageParam}`);
-
     const filteredItems = manufacturerParam == 'all' ? allCpuItems : allCpuItems.filter(item => item.Name.toLowerCase().includes(manufacturerParam));
-
-    console.log(`📦 Filtered items: ${filteredItems}`);
 
     const { paginatedItems, totalPages } = paginateItems(filteredItems, pageParam, ITEMS_PER_PAGE);
 
