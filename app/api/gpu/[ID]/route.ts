@@ -3,7 +3,7 @@ import { fetchFirestoreDocument } from "@/lib/db-services/db-utils";
 
 // In-memory LRU Cache for gpu data
 const gpuLRUCache = new Map<string, any>(); // Map<ID, gpuData>
-const CACHE_CAPACITY = 5; // Example: Cache up to 5 gpus (adjust based on monitoring)
+const CACHE_CAPACITY = 50; // Example: Cache up to 5 gpus (adjust based on monitoring)
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes TTL for cache entries
 
 // We store the timestamp of when the item was last put into cache

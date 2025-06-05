@@ -6,7 +6,7 @@ export default function SpecificationNav({
   activeSection: string;
 }) {
   return (
-    <nav className="fixed top-[25%] z-10 rounded-lg">
+    <nav className="fixed top-[25%] z-10 mx-5 rounded-lg hidden lg:block">
       <ul className="space-y-2">
         {sections.map((section) => (
           <li key={section}>

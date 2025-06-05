@@ -23,7 +23,7 @@ interface SearchProductCardProps {
 export default function SearchProductCard({ product }: SearchProductCardProps) {
   return (
     <Card
-      className="flex flex-col items-center my-4 md:flex-row gap-6 p-6
+      className="flex flex-col items-center my-4 md:flex-row gap-6 md:p-6
     bg-white border border-gray-200 shadow-md
     hover:border-orange-600 hover:shadow-lg hover:-translate-y-1 transform transition-colors"
     >
@@ -36,8 +36,8 @@ export default function SearchProductCard({ product }: SearchProductCardProps) {
           <Image
             src={product["Image URL"]}
             alt={product.Name}
-            width={200}
-            height={200}
+            width={150}
+            height={150}
             className="h-auto w-auto"
           />
         </Link>
@@ -57,7 +57,7 @@ export default function SearchProductCard({ product }: SearchProductCardProps) {
           </CardTitle>
         </CardHeader>
         {/* Description */}
-        <CardContent className="flex flex-wrap gap-4 text-sm md:text-base text-gray-700 mt-4">
+        <CardContent className="flex flex-wrap gap-4 text-sm md:text-base text-gray-700">
           {product.Description.map(([key, value]: [string, string], index) => (
             <div key={index} className="flex-1 min-w-[120px]">
               <p className="text-gray-500">{key}</p>
@@ -67,7 +67,7 @@ export default function SearchProductCard({ product }: SearchProductCardProps) {
         </CardContent>
 
         {/* View Details */}
-        <CardFooter className="justify-center md:justify-end mt-4">
+        <CardFooter className="justify-center md:justify-end">
           <Link
             href={`/components/${product.type}/${product.ID}`}
             className="

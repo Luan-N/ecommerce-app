@@ -3,7 +3,7 @@ import { fetchFirestoreDocument } from "@/lib/db-services/db-utils";
 
 // In-memory LRU Cache for cpu data
 const cpuLRUCache = new Map<string, any>(); // Map<ID, cpuData>
-const CACHE_CAPACITY = 5; // Example: Cache up to 5 cpus (adjust based on monitoring)
+const CACHE_CAPACITY = 50; // Example: Cache up to 5 cpus (adjust based on monitoring)
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes TTL for cache entries
 
 // We store the timestamp of when the item was last put into cache
