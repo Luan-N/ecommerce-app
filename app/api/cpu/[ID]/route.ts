@@ -9,7 +9,7 @@ const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes TTL for cache entries
 // We store the timestamp of when the item was last put into cache
 const cpuCacheTimestamps = new Map<string, number>();
 
-export async function GET(request: NextRequest, { params }: { params: { ID: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ ID: string }> }) {
   const { ID } = await params;
   const currentTime = Date.now();
 
