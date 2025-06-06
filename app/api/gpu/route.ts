@@ -1,16 +1,9 @@
 import { NextResponse } from 'next/server';
 import { paginateItems, fetchFirestoreDocument, GPUIndexItem } from '@/lib/db-services/db-utils'; // Assuming db-utils is in this path
 
-
 // --- Constants ---
 const ITEMS_PER_PAGE = 20;
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
-
-// const MANUFACTURER_FILTER_KEYWORDS: Record<string, string | undefined> = {
-//   nvidia: 'nvidia',
-//   amd: 'amd',
-//   intel: 'intel',
-// };
 
 // --- Cache State ---
 let gpuItemsCache: GPUIndexItem[] | null = null;

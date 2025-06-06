@@ -58,25 +58,35 @@ export default function Page({ params }: { params: Promise<{ ID: string }> }) {
 
   // Set the active section based current position
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-  const intersectingEntries = entries.filter(entry => entry.isIntersecting);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const intersectingEntries = entries.filter(
+          (entry) => entry.isIntersecting
+        );
 
-  if (intersectingEntries.length > 0) {
-    // Sort by vertical position (topmost first)
-    intersectingEntries.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-    setActiveSection(intersectingEntries[0].target.id);
-  } else{
-    setActiveSection(""); // Clear active section if no sections are intersecting
-  }
-}, {
-  threshold: 1.0,
-});
+        if (intersectingEntries.length > 0) {
+          // Sort by vertical position (topmost first)
+          intersectingEntries.sort(
+            (a, b) => a.boundingClientRect.top - b.boundingClientRect.top
+          );
+          setActiveSection(intersectingEntries[0].target.id);
+        } else {
+          setActiveSection(""); // Clear active section if no sections are intersecting
+        }
+      },
+      {
+        threshold: 1.0,
+      }
+    );
 
     const elements = sections
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
 
-    elements.forEach((el) => {observer.observe(el); return});
+    elements.forEach((el) => {
+      observer.observe(el);
+      return;
+    });
 
     return () => elements.forEach((el) => observer.unobserve(el));
   }, []);
@@ -103,20 +113,21 @@ export default function Page({ params }: { params: Promise<{ ID: string }> }) {
       <SpecificationNav sections={sections} activeSection={activeSection} />
       <main className="flex justify-center min-h-screen bg-gray-50 p-4">
         <section className="mt-25 mx-auto flex flex-col min-h-screen w-[90%] lg:w-3/5">
-        <div className="grid grid-cols-2 items-center gap-4 p-4 bg-gray-950 rounded-lg shadow-md">
-          {cpu?.["Image URL"] && (
-            <Image
-              src={cpu["Image URL"]}
-              alt={cpu.Name || "CPU Image"}
-              width={150}
-              height={150}
-              className="object-contain m-3 inline rounded"
-            />
-          )}
+          <div className="grid grid-cols-2 items-center gap-4 p-4 bg-gray-950 rounded-lg shadow-md">
+            {cpu?.["Image URL"] && (
+              <Image
+                src={cpu["Image URL"]}
+                alt={cpu.Name || "CPU Image"}
+                width={150}
+                height={150}
+                className="object-contain m-3 inline rounded"
+              />
+            )}
 
-          <h2 className="inline font-bold text-2xl text-white">{cpu?.Name}</h2>
-        </div>
-          
+            <h2 className="inline font-bold text-2xl text-white">
+              {cpu?.Name}
+            </h2>
+          </div>
 
           <DescriptionList
             items={[
@@ -124,7 +135,16 @@ export default function Page({ params }: { params: Promise<{ ID: string }> }) {
               { label: "Name", value: cpu?.Name || "N/A" },
               { label: "Manufacturer", value: cpu?.Manufacturer || "N/A" },
               { label: "Brand", value: cpu?.Brand || "N/A" },
-              { label: "Release Date", value: cpu?.["Release Date"] || "N/A" },
+              {
+                label: "Release Date",
+                value: cpu?.["Release Date"]
+                  ? new Date(cpu["Release Date"]).toLocaleDateString("en-US", {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })
+                  : "N/A",
+              },
             ]}
             title="Identification"
           />

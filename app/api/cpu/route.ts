@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { paginateItems, fetchFirestoreDocument, CPUIndexItem } from '@/lib/db-services/db-utils';
 
-
 // --- Constants ---
 const ITEMS_PER_PAGE = 20;
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes

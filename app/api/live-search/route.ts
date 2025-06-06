@@ -50,8 +50,11 @@ function mapGPUItemToProductSchema(item: GPUIndexItem): ProductSchema {
   };
 }
 
-async function getSearchableProducts(currentTime: number): Promise<ProductSchema[]> {
-  const isCacheStale = !cacheLastUpdated || (currentTime - cacheLastUpdated > CACHE_TTL_MS);
+async function getSearchableProducts(
+  currentTime: number
+): Promise<ProductSchema[]> {
+  const isCacheStale =
+    !cacheLastUpdated || currentTime - cacheLastUpdated > CACHE_TTL_MS;
 
   if (!isCacheStale && cachedProducts) {
     console.log("⚡ Serving cpu/gpu search data from cache");
@@ -60,29 +63,43 @@ async function getSearchableProducts(currentTime: number): Promise<ProductSchema
 
   console.log("📡 Fetching cpu/gpu search data from Firestore");
 
-  const [cpuIndexDoc, gpuIndexDoc] = await Promise.all([
-    fetchFirestoreDocument<{Items: CPUIndexItem[]}>("search-index", "cpu-index"),
-    fetchFirestoreDocument<{Items: GPUIndexItem[]}>("search-index", "gpu-index")
-  ]);
+  try {
+    const [cpuIndexDoc, gpuIndexDoc] = await Promise.all([
+      fetchFirestoreDocument<{ Items: CPUIndexItem[] }>(
+        "search-index",
+        "cpu-index"
+      ),
+      fetchFirestoreDocument<{ Items: GPUIndexItem[] }>(
+        "search-index",
+        "gpu-index"
+      ),
+    ]);
 
-  const isCpuSourceInvalid = !cpuIndexDoc || cpuIndexDoc.Items === undefined;
-  const isGpuSourceInvalid = !gpuIndexDoc || gpuIndexDoc.Items === undefined;
+    const cpuItemsFromDb: CPUIndexItem[] = cpuIndexDoc?.Items || [];
+    const gpuItemsFromDb: GPUIndexItem[] = gpuIndexDoc?.Items || [];
 
-  if (isCpuSourceInvalid && isGpuSourceInvalid) 
-    console.warn("🚨 Both CPU and GPU search index sources are missing or malformed.");
-  
-  const cpuItemsFromDb: CPUIndexItem[] = cpuIndexDoc?.Items || [];
-  const gpuItemsFromDb: GPUIndexItem[] = gpuIndexDoc?.Items || [];
+    const cpuProducts: ProductSchema[] = cpuItemsFromDb.map(
+      mapCPUItemToProductSchema
+    );
+    const gpuProducts: ProductSchema[] = gpuItemsFromDb.map(
+      mapGPUItemToProductSchema
+    );
 
-  const cpuProducts: ProductSchema[] = cpuItemsFromDb.map(mapCPUItemToProductSchema);
-  const gpuProducts: ProductSchema[] = gpuItemsFromDb.map(mapGPUItemToProductSchema);
+    const combinedItems = [...cpuProducts, ...gpuProducts];
 
-  const combinedItems = [...cpuProducts, ...gpuProducts];
+    // ONLY update cache if fetch was successful
+    cachedProducts = combinedItems;
+    cacheLastUpdated = currentTime;
 
-  cachedProducts = combinedItems;
-  cacheLastUpdated = currentTime;
-
-  return combinedItems;
+    return combinedItems;
+  } catch (error) {
+    console.error("🚨 Failed to refresh CPU/GPU search data cache:", error);
+    if (cachedProducts) {
+      console.log("⚡ Returning stale CPU/GPU search data cache due to fetch error.");
+      return cachedProducts;
+    }
+    throw error;
+  }
 }
 
 // --- Main GET Handler ---
@@ -92,7 +109,10 @@ export async function GET(req: NextRequest) {
   const currentTime = Date.now();
 
   if (!query) {
-    return NextResponse.json([]); // Return empty array if no query
+    return NextResponse.json(
+      { error: "Query parameter is required." },
+      { status: 400 }
+    );
   }
 
   try {
