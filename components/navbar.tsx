@@ -17,7 +17,7 @@ export default function NavBar() {
 
   return (
     <nav className="fixed md:block top-0 w-full bg-white/95 backdrop-blur-md shadow-md z-50">
-      <div className="w-full flex items-center justify-between h-16 px-6">
+      <div className="w-full flex items-center justify-between h-16 px-2 sm:px-6">
         {/* Logo */}
         <Link href="/" className="hidden md:flex items-center space-x-1 text-2xl font-extrabold">
           <span>PC</span>

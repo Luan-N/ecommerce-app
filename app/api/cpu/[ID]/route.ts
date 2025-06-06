@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fetchFirestoreDocument } from "@/lib/db-services/db-utils";
 
 // In-memory LRU Cache for cpu data
-const cpuLRUCache = new Map<string, any>(); // Map<ID, cpuData>
+const cpuLRUCache = new Map<string, unknown>(); // Map<ID, cpuData>
 const CACHE_CAPACITY = 50; // Example: Cache up to 5 cpus (adjust based on monitoring)
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes TTL for cache entries
 
@@ -54,8 +54,8 @@ export async function GET(request: NextRequest, { params }: { params: { ID: stri
     console.log(`🔍 Fetched and cached cpu data for ID: ${ID}`);
 
     return NextResponse.json(cpuData);
-  } catch (error: any) {
-    console.error("Error fetching cpu data:", error.message, error.stack);
+  } catch (error) {
+    console.error("Error fetching cpu data:", error);
     return NextResponse.json({ error: 'Failed to retrieve cpu data. Please try again later.' }, { status: 500 });
   }
 }

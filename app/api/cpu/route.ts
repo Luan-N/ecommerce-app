@@ -51,8 +51,8 @@ export async function GET(request: Request) {
 
     return NextResponse.json(responseData);
 
-  } catch (error: any) {
-    console.error("Error in GET CPU items API:", error.message, error.stack);
+  } catch (error) {
+    console.error("Error in GET CPU items API:", error);
     return NextResponse.json({ error: 'Failed to retrieve CPU data. Please try again later.' }, { status: 500 });
   }
 }

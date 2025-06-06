@@ -136,7 +136,8 @@ export async function GET(req: NextRequest) {
     };
 
     return NextResponse.json(responseData);
-  } catch (error: any) {
+  } catch (error) {
+    console.error("Error fetching search index:", error);
     return NextResponse.json(
       { error: "Failed to fetch search index. Please try again later." },
       { status: 500 }

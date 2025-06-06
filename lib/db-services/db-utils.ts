@@ -35,7 +35,7 @@ type FirestoreValue =
   | { mapValue: { fields?: Record<string, FirestoreValue> } };
 
 // 2) Convert a single value into a JS primitive (or nested object/array)
-function unwrapFirestoreValue(value: FirestoreValue): any {
+function unwrapFirestoreValue(value: FirestoreValue): unknown {
   const key = Object.keys(value)[0];
   switch (key) {
     case "nullValue":
@@ -62,7 +62,7 @@ function unwrapFirestoreValue(value: FirestoreValue): any {
     }
     case "mapValue": {
       const nested = (value as { mapValue: { fields?: Record<string, FirestoreValue> } }).mapValue.fields || {};
-      const obj: Record<string, any> = {};
+      const obj: Record<string, unknown> = {};
       for (const [k, v] of Object.entries(nested)) {
         obj[k] = unwrapFirestoreValue(v);
       }
@@ -75,7 +75,7 @@ function unwrapFirestoreValue(value: FirestoreValue): any {
 
 // Unwrap fields 
 function unwrapFirestoreFields<T>(fields: Record<string, FirestoreValue>): T {
-  const output: any = {};
+  const output: Record<string, unknown> = {};
   for (const [key, fireVal] of Object.entries(fields)) {
     output[key] = unwrapFirestoreValue(fireVal);
   }

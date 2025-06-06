@@ -40,14 +40,14 @@ export default function FullSearchPage() {
       }
     }
     fetchSearchResults();
-  }, [queryParam]);
+  }, [queryParam, pageParam]);
 
   return (
     <main className="mt-25 mx-5 md:mx-15">
         {/* Page Navigation */}
       <Pagination totalPages={totalPages} />
 
-      <h2 className="font-medium text-xl">Search Results for "{queryParam}"</h2>
+      <h2 className="font-medium text-xl">Search Results for &quot;{queryParam}&quot</h2>
 
       {/* BreadCrumb */}
       <BreadCrumbNavigation

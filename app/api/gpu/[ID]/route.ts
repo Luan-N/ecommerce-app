@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fetchFirestoreDocument } from "@/lib/db-services/db-utils";
 
 // In-memory LRU Cache for gpu data
-const gpuLRUCache = new Map<string, any>(); // Map<ID, gpuData>
+const gpuLRUCache = new Map<string, unknown>(); // Map<ID, gpuData>
 const CACHE_CAPACITY = 50; // Example: Cache up to 5 gpus (adjust based on monitoring)
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes TTL for cache entries
 
@@ -53,8 +53,8 @@ export async function GET(request: NextRequest, { params }: { params: { ID: stri
     console.log(`🔍 Fetched and cached gpu data for ID: ${ID}`);
 
     return NextResponse.json(gpuData);
-  } catch (error: any) {
-    console.error("Error fetching gpu data:", error.message, error.stack);
+  } catch (error) {
+    console.error("Error fetching gpu data:", error);
     return NextResponse.json({ error: 'Failed to retrieve gpu data. Please try again later.' }, { status: 500 });
   }
 }

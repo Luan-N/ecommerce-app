@@ -104,8 +104,8 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(filteredItems.slice(0, SEARCH_RESULTS_LIMIT));
 
-  } catch (error: any) {
-    console.error("❌ Error in GET request handler for combined search:", error.message, error.stack);
+  } catch (error) {
+    console.error("❌ Error in GET request handler for combined search:", error);
     return NextResponse.json(
       { error: "Failed to fetch search index. Please try again later." },
       { status: 500 }

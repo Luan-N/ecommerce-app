@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { CiSearch } from "react-icons/ci";
@@ -87,7 +88,7 @@ export default function SearchBar() {
       {/* Search Bar */}
       <div
         id="search-bar"
-        className="flex relative items-center w-full mx-7 border rounded-sm border-gray-300 peer"
+        className="flex relative items-center w-full mx-2 sm:mx-6 border rounded-sm border-gray-300 peer"
       >
         <input
           type="text"
@@ -123,9 +124,11 @@ export default function SearchBar() {
                 onClick={() => setQuery("")} // Clear the input when navigating
                 className="flex items-center space-x-3 group"
               >
-                <img
+                <Image
                   src={item["Image URL"]}
                   alt={item.Name}
+                  width={48}
+                  height={48}
                   className="w-12 h-12 object-contain"
                 />
                 <span className="text-sm font-medium text-gray-800 group-hover:text-orange-600 transition-colors">
