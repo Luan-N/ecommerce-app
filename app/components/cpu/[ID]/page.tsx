@@ -1,10 +1,45 @@
-"use client";
-
-import { use, useEffect, useState } from "react";
 import Image from "next/image";
 
-import DescriptionList from "@/components/description-list";
 import SpecificationNav from "@/components/specification-nav";
+import DescriptionList from "@/components/description-list";
+import { getItemInfo } from "@/lib/db-services/info-utils";
+
+type cpuSchema = {
+  Type: string;
+  ID: string;
+  Name: string;
+  Manufacturer: string;
+  Brand: string;
+  Cores: number;
+  Threads: number;
+  "Efficiency Cores"?: number;
+  "Performance Cores"?: number;
+  "Base Clock Frequency": string;
+  "Boost Clock Frequency": string;
+  "Efficiency Base Clock Frequency"?: string;
+  "Efficiency Boost Clock Frequency"?: string;
+  TDP: string;
+  "Turbo Max TDP"?: string;
+  "Socket Type": string;
+  "Integrated Graphics": string;
+  "Unlocked for Overclocking": boolean;
+  "Stock Cooler": string;
+  "Release Date": string;
+  Architecture: string;
+  "L1 Cache": string;
+  "L2 Cache": string;
+  "L3 Cache": string;
+  "PCIe Version": string;
+  "Supported Chipsets": string[];
+  "Memory Support": string;
+  "Max Memory": number;
+  "Max Operating Temperature": string;
+  "Image URL": string;
+  "Boosting Technologies": string[];
+  "Overclock Technologies": string[];
+  "Efficiency-core Base Clock"?: string;
+  "Efficiency-core Turbo Clock"?: string;
+};
 
 const sections = [
   "Identification",
@@ -16,101 +51,14 @@ const sections = [
   "Cooling Solutions",
 ];
 
-type cpuSchema = {
-  Type: string;
-  ID: string;
-  Name: string;
-  Manufacturer: string;
-  Brand: string;
-  Cores: number;
-  Threads: number;
-  "Efficiency Cores": number;
-  "Performance Cores": number;
-  "Base Clock Frequency": string;
-  "Boost Clock Frequency": string;
-  "Efficiency Base Clock Frequency": string;
-  "Efficiency Boost Clock Frequency": string;
-  TDP: string;
-  "Turbo Max TDP": string;
-  "Socket Type": string;
-  "Integrated Graphics": string;
-  "Unlocked for Overclocking": boolean;
-  "Stock Cooler": string;
-  "Release Date": string;
-  Architecture: string;
-  "L1 Cache": string;
-  "L2 Cache": string;
-  "L3 Cache": string;
-  "PCIe Version": string;
-  "Supported Chipsets": [key: string];
-  "Memory Support": string;
-  "Max Memory": number;
-  "Max Operating Temperature": string;
-  "Image URL": string;
-  "Boosting Technologies": [key: string];
-  "Overclock Technologies": [key: string];
-};
-
-export default function Page({ params }: { params: Promise<{ ID: string }> }) {
-  const { ID } = use(params);
-  const [cpu, setCpuData] = useState<cpuSchema>();
-  const [activeSection, setActiveSection] = useState("");
-
-  // Set the active section based current position
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const intersectingEntries = entries.filter(
-          (entry) => entry.isIntersecting
-        );
-
-        if (intersectingEntries.length > 0) {
-          // Sort by vertical position (topmost first)
-          intersectingEntries.sort(
-            (a, b) => a.boundingClientRect.top - b.boundingClientRect.top
-          );
-          setActiveSection(intersectingEntries[0].target.id);
-        } else {
-          setActiveSection(""); // Clear active section if no sections are intersecting
-        }
-      },
-      {
-        threshold: 1.0,
-      }
-    );
-
-    const elements = sections
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
-
-    elements.forEach((el) => {
-      observer.observe(el);
-      return;
-    });
-
-    return () => elements.forEach((el) => observer.unobserve(el));
-  }, []);
-
-  // Fetch CPU data based on ID
-  useEffect(() => {
-    async function fetchCPUData() {
-      try {
-        const res = await fetch(`/api/cpu/${ID}`);
-        if (!res.ok) {
-          throw new Error("Failed to fetch CPU data");
-        }
-        const data = await res.json();
-        setCpuData(data);
-      } catch (error) {
-        console.error("Error fetching CPU data:", error);
-      }
-    }
-    fetchCPUData();
-  }, [ID]);
-
+export default async function Page({ params }: {params: {ID: string}}) {
+  const { ID } = await params;
+  let cpu: cpuSchema = await getItemInfo(ID, 'cpus');
+  
   return (
     <>
-      <SpecificationNav sections={sections} activeSection={activeSection} />
+      <SpecificationNav sections={sections} />
+
       <main className="flex justify-center min-h-screen bg-gray-50 p-4">
         <section className="mt-25 mx-auto flex flex-col min-h-screen w-[90%] lg:w-3/5">
           <div className="grid grid-cols-2 items-center gap-4 p-4 bg-gray-950 rounded-lg shadow-md">
@@ -129,6 +77,7 @@ export default function Page({ params }: { params: Promise<{ ID: string }> }) {
             </h2>
           </div>
 
+          {/* DescriptionList components can remain Server Components */}
           <DescriptionList
             items={[
               { label: "Type", value: cpu?.Type.toUpperCase() || "N/A" },
@@ -167,7 +116,7 @@ export default function Page({ params }: { params: Promise<{ ID: string }> }) {
               { label: "PCIe Version", value: cpu?.["PCIe Version"] || "N/A" },
               {
                 label: "Supported Chipsets",
-                value: cpu?.["Supported Chipsets"].join(", ") || "N/A",
+                value: cpu?.["Supported Chipsets"]?.join(", ") || "N/A",
               },
             ]}
             title="Architecture & Design"
@@ -179,11 +128,11 @@ export default function Page({ params }: { params: Promise<{ ID: string }> }) {
               { label: "Threads", value: cpu?.Threads || "N/A" },
               {
                 label: "Efficiency Cores",
-                value: cpu?.["Efficiency Cores"] || "N/A",
+                value: cpu?.["Efficiency Cores"]?.toString() || "N/A",
               },
               {
                 label: "Performance Cores",
-                value: cpu?.["Performance Cores"] || "N/A",
+                value: cpu?.["Performance Cores"]?.toString() || "N/A",
               },
               {
                 label: "Base Core Clock",
@@ -193,23 +142,26 @@ export default function Page({ params }: { params: Promise<{ ID: string }> }) {
                 label: "Boost Clock Frequency",
                 value: cpu?.["Boost Clock Frequency"] + " GHz" || "N/A",
               },
-              {
-                label: "Efficiency Base Clock Frequency",
-                value:
-                  cpu?.["Efficiency Base Clock Frequency"] + " GHz" || "N/A",
-              },
-              {
-                label: "Efficiency Boost Clock Frequency",
-                value:
-                  cpu?.["Efficiency Boost Clock Frequency"] + " GHz" || "N/A",
-              },
+              // Only display if relevant
+              ...(cpu?.Manufacturer === "Intel" && cpu?.["Efficiency Base Clock Frequency"]
+                ? [{
+                    label: "Efficiency Base Clock Frequency",
+                    value: cpu?.["Efficiency Base Clock Frequency"] + " GHz" || "N/A",
+                  }]
+                : []),
+              ...(cpu?.Manufacturer === "Intel" && cpu?.["Efficiency Boost Clock Frequency"]
+                ? [{
+                    label: "Efficiency Boost Clock Frequency",
+                    value: cpu?.["Efficiency Boost Clock Frequency"] + " GHz" || "N/A",
+                  }]
+                : []),
               {
                 label: "Boosting Technologies",
-                value: cpu?.["Boosting Technologies"].join(", ") || "N/A",
+                value: cpu?.["Boosting Technologies"]?.join(", ") || "N/A",
               },
               {
                 label: "Overclocking Technologies",
-                value: cpu?.["Overclock Technologies"].join(", ") || "N/A",
+                value: cpu?.["Overclock Technologies"]?.join(", ") || "N/A",
               },
             ]}
             title="Performance"
@@ -220,7 +172,7 @@ export default function Page({ params }: { params: Promise<{ ID: string }> }) {
               { label: "TDP", value: cpu?.TDP + " W" || "N/A" },
               {
                 label: "Turbo Max TDP",
-                value: cpu?.["Turbo Max TDP"] || "N/A",
+                value: cpu?.["Turbo Max TDP"] + " W" || "N/A",
               },
               {
                 label: "Max Operating Temperature",

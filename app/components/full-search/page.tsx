@@ -1,28 +1,55 @@
-import { Suspense } from "react";
-import CpuClientComponent from "./full-search-client";
-import { Skeleton } from "@/components/ui/skeleton"; // Example loading UI
+import BreadCrumbNavigation from "@/components/breadcrumb-nav";
+import Pagination from "@/components/pagination";
+import SearchProductCard from "@/components/search-product-card";
+import { getSearchItems } from "@/lib/db-services/search-utils";
 
-// This is now a Server Component
-export default function FullSearchPage() {
-  return (
-    // Suspense provides a fallback while the client component loads
-    <Suspense fallback={<LoadingSkeleton />}>
-      <CpuClientComponent />
-    </Suspense>
-  );
-}
+type productSchema = {
+  type: string;
+  ID: string;
+  Name: string;
+  Description: [string, string][];
+  "Image URL": string;
+};
 
-// A simple loading skeleton component
-function LoadingSkeleton() {
+export default async function FullSearchPage({searchParams}: {searchParams: {query?: string, page?: string}}) {
+  const params = await searchParams; // Ensure searchParams is awaited
+  const queryParam = params.query || ""; // Default to empty string if not provided
+  const pageParam = params.page || 1; // Default to page 1 if not provided
+
+  const response = await getSearchItems(queryParam, Number(pageParam));
+  interface SearchResponse {
+    items: productSchema[];
+    totalPages: number;
+    currentPage: number;
+  }
+
+  const { items, totalPages } = await response.json() as SearchResponse;
+
   return (
-    <div className="p-4">
-      <Skeleton className="h-12 w-1/4 mx-auto mb-8" />
-      <Skeleton className="h-8 w-1/2 mb-4" />
-      <div className="space-y-4">
-        {[...Array(5)].map((_, i) => (
-          <Skeleton key={i} className="h-24 w-full" />
-        ))}
-      </div>
-    </div>
+    <main className="mt-25 mx-5 md:mx-15">
+        {/* Page Navigation */}
+      <Pagination totalPages={totalPages} />
+
+      <h2 className="font-medium text-xl">Search Results for &quot;{queryParam}&quot;</h2>
+
+      {/* BreadCrumb */}
+      <BreadCrumbNavigation
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Components", href: `/components` },
+          { name: "Full Search" },
+        ]}
+      />
+
+      {/* Search Product Cards */}
+      <section>
+        {items.map((product) => (
+        <SearchProductCard key={product.ID} product={product} />
+      ))}
+      </section>
+      
+      {/* Page Navigation */}
+        <Pagination totalPages={totalPages} />
+    </main>
   );
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { paginateItems, fetchFirestoreDocument, GPUIndexItem } from '@/lib/db-services/db-utils'; // Assuming db-utils is in this path
+import { paginateItems, GPUIndexItem } from '@/lib/db-services/search-utils';
+import { fetchFirestoreDocument } from '@/lib/db-services/firestore-db'; // Assuming db-utils is in this path
 
 // --- Constants ---
 const ITEMS_PER_PAGE = 20;

@@ -1,10 +1,25 @@
+import { fetchFirestoreDocument } from "@/lib/db-services/firestore-db";
 import { NextRequest, NextResponse } from "next/server";
-import {
-  fetchFirestoreDocument,
-  CPUIndexItem,
-  GPUIndexItem,
-  paginateItems,
-} from "@/lib/db-services/db-utils"; // Assuming db-utils exports these types and functions
+import { ApiError } from "./errors";
+// --- Types ---
+export type CPUIndexItem = {
+  ID: string;
+  Name: string;
+  Cores: number;
+  Threads: number;
+  'Boost Clock Frequency': string;
+  'L3 Cache': string;
+  "Image URL": string;
+};
+
+export type GPUIndexItem = {
+  ID: string;
+  Name: string;
+  "Memory Size": string;
+  "Memory Type": string;
+  "Boost Clock": string;
+  "Image URL": string;
+};
 
 // --- Constants ---
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
@@ -14,7 +29,7 @@ const ITEMS_PER_PAGE = 20;
 let cachedProducts: ProductSchema[] | null = null;
 let cacheLastUpdated: number | null = null;
 
-async function getSearchableProducts(
+export async function getSearchableProducts(
   currentTime: number
 ): Promise<ProductSchema[]> {
   const isCacheStale =
@@ -66,18 +81,11 @@ async function getSearchableProducts(
   }
 }
 
-// --- Main GET Handler ---
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const query = searchParams.get("query");
-  const pageParam = Math.max(1, Number(searchParams.get("page")) || 1);
+export async function getSearchItems(query: string, page: number): Promise<Response> {
   const currentTime = Date.now();
 
   if (!query) {
-    return NextResponse.json(
-      { error: "Query parameter is required." },
-      { status: 400 }
-    );
+    throw new ApiError("Query parameter is required", 400);
   }
 
   try {
@@ -89,14 +97,14 @@ export async function GET(req: NextRequest) {
 
     const { paginatedItems, totalPages } = paginateItems(
       filteredItems,
-      pageParam,
+      page,
       ITEMS_PER_PAGE
     );
 
     const responseData = {
       items: paginatedItems,
       totalPages: totalPages,
-      currentPage: pageParam,
+      currentPage: page,
     };
 
     return NextResponse.json(responseData);
@@ -118,7 +126,7 @@ type ProductSchema = {
   "Image URL": string;
 };
 // --- Helper Functions ---
-function mapCPUItemToProductSchema(item: CPUIndexItem): ProductSchema {
+export function mapCPUItemToProductSchema(item: CPUIndexItem): ProductSchema {
   const description: [string, string][] = [
     ["Cores", item.Cores.toString()],
     ["Threads", item.Threads.toString()],
@@ -134,7 +142,7 @@ function mapCPUItemToProductSchema(item: CPUIndexItem): ProductSchema {
   };
 }
 
-function mapGPUItemToProductSchema(item: GPUIndexItem): ProductSchema {
+export function mapGPUItemToProductSchema(item: GPUIndexItem): ProductSchema {
   const description: [string, string][] = [
     ["Memory Size", item["Memory Size"]],
     ["Memory Type", item["Memory Type"]],
@@ -148,3 +156,11 @@ function mapGPUItemToProductSchema(item: GPUIndexItem): ProductSchema {
     "Image URL": item["Image URL"],
   };
 }
+
+export function paginateItems<T>(items: T[], page: number, itemsPerPage: number): { paginatedItems: T[]; totalPages: number } {
+  const startIndex = (page - 1) * itemsPerPage;
+  const paginatedItems = items.slice(startIndex, startIndex + itemsPerPage);
+  const totalPages = Math.ceil(items.length / itemsPerPage);
+  return { paginatedItems, totalPages };
+}
+

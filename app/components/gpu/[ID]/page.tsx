@@ -1,30 +1,14 @@
-"use client";
+import { getItemInfo } from "@/lib/db-services/info-utils";
 
-import { use, useEffect, useState } from "react";
+export default async function Page({ params }: {params: {ID: string}}) {
+  const { ID } = await params;
+  let gpu: any | null = null;
 
-export default function Page({ params }: { params: Promise<{ ID: string }> }) {
-  const { ID } = use(params);
-  const [cpuData, setCpuData] = useState(null);
-
-  useEffect(() => {
-    async function fetchGPUData() {
-      try {
-        const res = await fetch(`/api/gpu/${ID}`);
-        if (!res.ok) {
-          throw new Error("Failed to fetch GPU data");
-        }
-        const data = await res.json();
-        setCpuData(data);
-      } catch (error) {
-        console.error("Error fetching CPU data:", error);
-      }
-    }
-    fetchGPUData();
-  }, [ID]);
+    gpu = await getItemInfo(ID, 'gpus');
 
   return (
     <main>
-        <h2>{JSON.stringify(cpuData)}</h2>
+        <h2>{JSON.stringify(gpu)}</h2>
     </main>
   )
 }
