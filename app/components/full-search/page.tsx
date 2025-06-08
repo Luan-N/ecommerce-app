@@ -23,7 +23,7 @@ export default async function FullSearchPage({searchParams}: {searchParams: {que
     currentPage: number;
   }
 
-  const { items, totalPages } = await response.json() as SearchResponse;
+  const { items, totalPages } = await response as SearchResponse;
 
   return (
     <main className="mt-25 mx-5 md:mx-15">
@@ -40,10 +40,18 @@ export default async function FullSearchPage({searchParams}: {searchParams: {que
           { name: "Full Search" },
         ]}
       />
+      
+      {/* No Search Result */}
+      {!items || items.length === 0 && (
+        <div className="text-center mt-10">
+          <h3 className="text-lg font-semibold">No results found</h3>
+          <p className="text-sm text-muted-foreground">Try searching for something else.</p>
+        </div>
+      )}
 
       {/* Search Product Cards */}
       <section>
-        {items.map((product) => (
+        {items && items.length > 0 && items.map((product) => (
         <SearchProductCard key={product.ID} product={product} />
       ))}
       </section>

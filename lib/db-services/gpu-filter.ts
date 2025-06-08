@@ -28,28 +28,20 @@ async function getGPUItems(currentTime: number): Promise<GPUIndexItem[]> {
 }
 
 // --- Main GET Handler ---
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const manufacturerParam = searchParams.get('manf') || 'all';
-  const pageParam = Math.max(1, Number(searchParams.get("page")) || 1);
+export async function getGPUFilteredItems(manufacturerParam: string | "all", pageParam: number | 1) {
   const currentTime = Date.now();
 
   try {
     const allGpuItems = await getGPUItems(currentTime);
 
     const filteredItems = manufacturerParam == 'all'? allGpuItems : allGpuItems.filter(item => item.Name.toLowerCase().includes(manufacturerParam));
+    
     const { paginatedItems, totalPages } = paginateItems(filteredItems, pageParam, ITEMS_PER_PAGE);
 
-    const responseData = {
-      items: paginatedItems,
-      totalPages: totalPages,
-      currentPage: pageParam,
-    };
-
-    return NextResponse.json(responseData);
+    return { paginatedItems, totalPages, pageParam };
 
   } catch (error) {
     console.error("Error in GET GPU items API:", error);
-    return NextResponse.json({ error: 'Failed to retrieve GPU data. Please try again later.' }, { status: 500 });
+    throw error;
   }
 }

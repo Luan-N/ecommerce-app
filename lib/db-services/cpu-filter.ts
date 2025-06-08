@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import { paginateItems, CPUIndexItem } from '@/lib/db-services/search-utils';
 import { fetchFirestoreDocument } from '@/lib/db-services/firestore-db';
 
@@ -11,7 +10,7 @@ let cpuItemsCache: CPUIndexItem[] | null = null;
 let cacheLastUpdated: number | null = null;
 
 // --- Helper Functions ---
-async function getCPUItems(currentTime: number): Promise<CPUIndexItem[]> {
+async function getComponentItems(currentTime: number): Promise<CPUIndexItem[]> {
   const isCacheStale = !cacheLastUpdated || (currentTime - cacheLastUpdated > CACHE_TTL_MS);
 
   // Refetch if cache is stale or if the cache is not populated for some reason
@@ -29,30 +28,20 @@ async function getCPUItems(currentTime: number): Promise<CPUIndexItem[]> {
 }
 
 // --- Main GET Handler ---
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const manufacturerParam = searchParams.get('manf') || 'all';
-
-  const pageParam = Math.max(1, Number(searchParams.get("page")) || 1);
+export async function getCPUFilteredItems(manufacturerParam: string | "all", pageParam: number | 1) {
   const currentTime = Date.now();
 
   try {
-    const allCpuItems = await getCPUItems(currentTime);
+    const allCpuItems = await getComponentItems(currentTime);
 
-    const filteredItems = manufacturerParam == 'all' ? allCpuItems : allCpuItems.filter(item => item.Name.toLowerCase().includes(manufacturerParam));
+    const filteredItems = manufacturerParam == "all" ? allCpuItems : allCpuItems.filter(item => item.Name.toLowerCase().includes(manufacturerParam));
 
     const { paginatedItems, totalPages } = paginateItems(filteredItems, pageParam, ITEMS_PER_PAGE);
 
-    const responseData = {
-      items: paginatedItems,
-      totalPages: totalPages,
-      currentPage: pageParam, // Optionally include current page in response
-    };
-
-    return NextResponse.json(responseData);
+    return {paginatedItems, totalPages, pageParam};
 
   } catch (error) {
     console.error("Error in GET CPU items API:", error);
-    return NextResponse.json({ error: 'Failed to retrieve CPU data. Please try again later.' }, { status: 500 });
+    throw error;
   }
 }

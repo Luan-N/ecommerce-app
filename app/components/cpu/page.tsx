@@ -1,28 +1,75 @@
-import { Suspense } from "react";
-import CpuClientComponent from "./cpu-client";
-import { Skeleton } from "@/components/ui/skeleton"; // Example loading UI
+import BreadCrumbNavigation from "@/components/breadcrumb-nav";
+import Pagination from "@/components/pagination";
+import SearchProductCard from "@/components/search-product-card";
+import ComponentFilter from "@/components/component-filter";
+import { getCPUFilteredItems } from "@/lib/db-services/cpu-filter";
 
-// This is now a Server Component
-export default function CpuPage() {
-  return (
-    // Suspense provides a fallback while the client component loads
-    <Suspense fallback={<LoadingSkeleton />}>
-      <CpuClientComponent />
-    </Suspense>
-  );
-}
+type cpuSchema = {
+  ID: string;
+  Name: string;
+  Cores: number;
+  Threads: number;
+  "Boost Clock Frequency": string;
+  "L3 Cache": string;
+  "Image URL": string;
+};
 
-// A simple loading skeleton component
-function LoadingSkeleton() {
+export default async function CpuPage({searchParams}: { searchParams: { manf?: string, page?: string } }) {
+  const params = await searchParams; // Ensure searchParams is awaited
+  const manf = params.manf || "all"
+  const page = params.page || 1;
+
+  const { paginatedItems: cpus, totalPages } = await getCPUFilteredItems(manf, Number(page));
+
   return (
-    <div className="p-4">
-      <Skeleton className="h-12 w-1/4 mx-auto mb-8" />
-      <Skeleton className="h-8 w-1/2 mb-4" />
-      <div className="space-y-4">
-        {[...Array(5)].map((_, i) => (
-          <Skeleton key={i} className="h-24 w-full" />
+    <main className="mt-25 mx-5 md:mx-15">
+      {/* CPU Navigation */}
+      <nav className="mb-10 flex justify-center" aria-label="cpu-navigation">
+        <div className="inline-flex items-center justify-center gap-1 bg-muted border rounded-md p-1">
+          {["All", "AMD", "Intel"].map((manf) => (
+            <ComponentFilter
+              key={manf}
+              manf={manf}
+            />
+          ))}
+        </div>
+      </nav>
+
+      {/* Pagination */}
+      <Pagination totalPages={totalPages} />
+
+      {/* Bread Crumb */}
+      <BreadCrumbNavigation
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Components", href: "/Components" },
+          { name: "CPU" }, // Current page
+        ]}
+      />
+
+      {/* CPU List */}
+      <section aria-label="cpu-list">
+        {cpus.map((cpu) => (
+          <SearchProductCard
+            key={cpu.ID}
+            product={{
+              type: "cpu",
+              ID: cpu.ID,
+              Name: `${cpu.Name} ${cpu.Cores}C/${cpu.Threads}T ${cpu["Boost Clock Frequency"]} Mhz Processor Speed ${cpu["L3 Cache"]} L3 Cache`,
+              Description: [
+                ["Processor Type", cpu.Name.match(/(?:Ryzen\s\d|Core\s[im]\d)/i)?.[0] || "Unknown"],
+                ["Cores/Threads", `${cpu.Cores}C/${cpu.Threads}T`],
+                ["Boost Clock Frequency", cpu["Boost Clock Frequency"]],
+                ["L3 Cache", cpu["L3 Cache"]],
+              ],
+              "Image URL": cpu["Image URL"],
+            }}
+          />
         ))}
-      </div>
-    </div>
+        
+        {/* Pagination */}
+        <Pagination totalPages={totalPages} />
+      </section>
+    </main>
   );
 }

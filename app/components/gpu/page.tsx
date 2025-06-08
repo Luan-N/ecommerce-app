@@ -1,28 +1,73 @@
-import { Suspense } from "react";
-import CpuClientComponent from "./gpu-client";
-import { Skeleton } from "@/components/ui/skeleton"; // Example loading UI
+import BreadCrumbNavigation from "@/components/breadcrumb-nav";
+import Pagination from "@/components/pagination";
+import SearchProductCard from "@/components/search-product-card";
+import ComponentFilter from "@/components/component-filter";
+import { getGPUFilteredItems } from "@/lib/db-services/gpu-filter";
 
-// This is now a Server Component
-export default function GpuPage() {
-  return (
-    // Suspense provides a fallback while the client component loads
-    <Suspense fallback={<LoadingSkeleton />}>
-      <CpuClientComponent />
-    </Suspense>
-  );
-}
+type gpuSchema = {
+  ID: string;
+  Name: string;
+  "Memory Size": string;
+  "Memory Type": string;
+  "Boost Clock": string;
+  "Image URL": string;
+};
 
-// A simple loading skeleton component
-function LoadingSkeleton() {
+export default async function GpuPages({searchParams}: {searchParams: {manf?: string, page?: string}}) {
+  const params = await searchParams;
+  const manf = params.manf || "all";
+  const page = Number(params.page) || 1; // Default to page 1 if not provided
+
+  const { paginatedItems: gpus, totalPages } = await getGPUFilteredItems(manf, page);
+
   return (
-    <div className="p-4">
-      <Skeleton className="h-12 w-1/4 mx-auto mb-8" />
-      <Skeleton className="h-8 w-1/2 mb-4" />
-      <div className="space-y-4">
-        {[...Array(5)].map((_, i) => (
-          <Skeleton key={i} className="h-24 w-full" />
+    <main className="mt-25 mx-5 md:mx-15">
+      {/* GPU Navigation */}
+      <nav className="mb-10 flex justify-center" aria-label="cpu-navigation">
+        <div className="inline-flex items-center justify-center gap-1 bg-muted border rounded-md p-1">
+          {["All", "AMD", "NVIDIA"].map((manf) => (
+            <ComponentFilter
+              key={manf}
+              manf={manf}
+            />
+          ))}
+        </div>
+      </nav>
+
+      {/* Pagination */}
+      <Pagination totalPages={totalPages} />
+
+      {/* Bread Crumb */}
+      <BreadCrumbNavigation
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Components", href: "/Components" },
+          { name: "GPU" }, // Current page
+        ]}
+      />
+
+      {/* GPU List */}
+      <section aria-label="cpu-list">
+        {gpus.map((gpu) => (
+          <SearchProductCard
+            key={gpu.ID}
+            product={{
+              type: "gpu",
+              ID: gpu.ID,
+              Name: `${gpu.Name} ${gpu["Memory Size"]} ${gpu["Memory Type"]} ${gpu["Boost Clock"]} Boost Clock`,
+              Description: [
+                ["Memory Size", gpu["Memory Size"]],
+                ["Boost Clock Frequency", gpu["Boost Clock"]],
+                ["Memory Type", gpu["Memory Type"]],
+              ],
+              "Image URL": gpu["Image URL"],
+            }}
+          />
         ))}
-      </div>
-    </div>
+        
+        {/* Pagination */}
+        <Pagination totalPages={totalPages} />
+      </section>
+    </main>
   );
 }

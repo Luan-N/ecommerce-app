@@ -59,8 +59,8 @@ export default async function Page({ params }: {params: {ID: string}}) {
     <>
       <SpecificationNav sections={sections} />
 
-      <main className="flex justify-center min-h-screen bg-gray-50 p-4">
-        <section className="mt-25 mx-auto flex flex-col min-h-screen w-[90%] lg:w-3/5">
+      <main className="flex justify-center min-h-screen bg-gray-50 mt-25 mx-5 md:mx-15">
+        <section className="flex flex-col min-h-screen w-[90%] lg:w-3/5">
           <div className="grid grid-cols-2 items-center gap-4 p-4 bg-gray-950 rounded-lg shadow-md">
             {cpu?.["Image URL"] && (
               <Image

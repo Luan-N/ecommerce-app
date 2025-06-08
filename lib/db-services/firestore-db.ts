@@ -1,5 +1,5 @@
 import { getTokenFromGCPServiceAccount } from '@sagi.io/workers-jwt'
-import { ApiError } from './errors';
+import { ApiError } from '../errors';
 
 // --- Cached Token ---
 let CachedToken: string | null = null;

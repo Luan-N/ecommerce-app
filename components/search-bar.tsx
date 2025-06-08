@@ -47,12 +47,16 @@ export default function SearchBar() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<ProductSchema[]>([]);
 
-  function fullSearch(searchQuery: string, page: number) { // Renamed query to searchQuery to avoid conflict
+  function fullSearch(searchQuery: string, page: number) {
+    // Renamed query to searchQuery to avoid conflict
     if (!searchQuery || searchQuery.trim() === "") return;
     router.push(
-      `/components/full-search?query=${encodeURIComponent(searchQuery)}&page=${page}`
+      `/components/full-search?query=${encodeURIComponent(
+        searchQuery
+      )}&page=${page}`
     );
     setQuery(""); // Clear the input field
+    setResults([]); // Clear the results
   }
 
   useEffect(() => {
@@ -62,7 +66,7 @@ export default function SearchBar() {
     }
 
     const timerId = setTimeout(async () => {
-      if(query.length == 0) return;
+      if (query.length == 0) return;
       try {
         const res = await fetch(
           `/api/live-search?query=${encodeURIComponent(query)}`
@@ -121,7 +125,10 @@ export default function SearchBar() {
             >
               <Link
                 href={`/components/${item.type}/${item.ID}`}
-                onClick={() => setQuery("")} // Clear the input when navigating
+                onClick={() => {
+                  setQuery("");
+                  setResults([]); // Clear the results
+                }} // Clear the input after navigating
                 className="flex items-center space-x-3 group"
               >
                 <Image

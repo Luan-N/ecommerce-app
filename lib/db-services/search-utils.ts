@@ -1,6 +1,5 @@
 import { fetchFirestoreDocument } from "@/lib/db-services/firestore-db";
-import { NextRequest, NextResponse } from "next/server";
-import { ApiError } from "./errors";
+import { ApiError } from "../errors";
 // --- Types ---
 export type CPUIndexItem = {
   ID: string;
@@ -81,7 +80,7 @@ export async function getSearchableProducts(
   }
 }
 
-export async function getSearchItems(query: string, page: number): Promise<Response> {
+export async function getSearchItems(query: string, page: number) {
   const currentTime = Date.now();
 
   if (!query) {
@@ -107,13 +106,10 @@ export async function getSearchItems(query: string, page: number): Promise<Respo
       currentPage: page,
     };
 
-    return NextResponse.json(responseData);
+    return responseData;
   } catch (error) {
     console.error("Error fetching search index:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch search index. Please try again later." },
-      { status: 500 }
-    );
+    throw error;
   }
 }
 
