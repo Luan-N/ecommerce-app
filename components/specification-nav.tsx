@@ -34,16 +34,14 @@ export default function SpecificationNav({ sections = [] }: { sections: string[]
       }
 
       if (!currentBestCandidateId) {
-        if (window.scrollY < 50 && sections.length > 0) {
+        if (window.scrollY < 50 && sections.length > 0) 
           currentBestCandidateId = sections[0];
-        } else {
+        else 
           currentBestCandidateId = activeSection; 
-        }
       }
 
-      if (activeSection !== currentBestCandidateId) {
+      if (activeSection !== currentBestCandidateId) 
         setActiveSection(currentBestCandidateId);
-      }
     };
 
     observerRef.current = new IntersectionObserver(handleIntersect, observerOptions);
@@ -62,7 +60,7 @@ export default function SpecificationNav({ sections = [] }: { sections: string[]
   }, [sections, activeSection]);
 
   return (
-    <nav className="fixed top-[25%] z-10 mx-5 rounded-lg hidden lg:block">
+    <nav className="fixed top-[25%] left-0 z-10 mx-5 rounded-lg hidden lg:block">
       <ul className="space-y-2">
         {sections.map((section) => (
           <li key={section}>

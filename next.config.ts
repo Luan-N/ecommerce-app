@@ -21,6 +21,8 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'pcoutlet.com' },
       { protocol: 'https', hostname: 'computercity.com' },
       { protocol: 'https', hostname: 'assetsio.gnwcdn.com' },
+      { protocol: 'https', hostname: 'upload.wikimedia.org' },
+      { protocol: 'https', hostname: 'c1.neweggimages.com' },
     ],
   },
   //reactStrictMode: false,
