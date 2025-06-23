@@ -4,6 +4,7 @@ import SpecificationNav from "@/components/specification-nav";
 import DescriptionList from "@/components/description-list";
 import { getItemInfo } from "@/lib/db-services/info-utils";
 import ProductsCTA from "@/components/products-cta";
+import ScrollUp from "@/components/scroll-up";
 
 type cpuSchema = {
   Type: string;
@@ -58,10 +59,12 @@ export default async function Page({ params }: { params: { ID: string } }) {
 
   return (
     <main className="flex flex-col md:flex-row justify-evenly min-h-screen bg-gray-50 mt-25 mx-5 lg:ml-75 gap-y-10">
+
+      <ScrollUp/>
       <SpecificationNav sections={sections} />
 
       <section className="flex flex-col min-h-screen lg:w-3/5">
-        <div className="grid grid-cols-2 items-center gap-4 p-4 bg-gray-950 rounded-lg shadow-md">
+        <div className="grid grid-cols-2 items-center gap-4 p-4 bg-gray-950 rounded-lg shadow-md mb-10">
           {cpu?.["Image URL"] && (
             <Image
               src={cpu["Image URL"]}

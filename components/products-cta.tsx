@@ -12,7 +12,7 @@ export default function ProductsCTA({ product }: { product: string }) {
   const altquery = product.replace(/\s+/g, "%20");
 
   const prompt = `Search the internet and give me the most up-to-date price of the following product: ${product}.
-    Provide the price in USD. Do not include any other information or text, just the price. If the price is not available, return blank.`;
+    Provide the price in USD. Do not include any other information or text, just the price. If the price is not available, return N/A`;
 
   useEffect(() => {
     const fetchPrice = async () => {
@@ -28,7 +28,7 @@ export default function ProductsCTA({ product }: { product: string }) {
     };
 
     fetchPrice();
-  });
+  }, [product]); // <--- Add this empty dependency array
 
   return (
     <section
@@ -101,7 +101,7 @@ export default function ProductsCTA({ product }: { product: string }) {
       {/* Price Display */}
       <div className="w-full flex justify-center items-center rounded-lg py-2 border mt-2">
         <span className="text-lg">
-          {text ? `Estimated Price: ${text}` : "Price not available"}
+          {text ? `Estimated Price: ${text}` : "Retrieving estimated price..."}
         </span>
       </div>
       <h2 className="text-sm mt-4 mb-2 text-black/50 border-b text-center w-full">
