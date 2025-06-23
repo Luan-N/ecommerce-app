@@ -7,6 +7,7 @@ import ProductsCTA from "@/components/products-cta";
 import ScrollUp from "@/components/scroll-up";
 
 type gpuSchema = {
+  ID: string;
   "Additional Information": {
     string: string;
   };
@@ -26,7 +27,7 @@ type gpuSchema = {
   "DirectX Version": number;
   "OpenGL Version": string;
   "PCIe Version": string;
-  "Ray Tracing": string;
+  "Ray Tracing": boolean;
   "Vulkan Version": string;
   "FP32 Compute": string;
   "Fabrication Node": string;
@@ -89,7 +90,16 @@ export default async function Page({ params }: { params: { ID: string } }) {
             { label: "Type", value: gpu.Type.toUpperCase() || "N/A" },
             { label: "Manufacturer", value: gpu.Manufacturer || "N/A" },
             { label: "Brand", value: gpu.Brand || "N/A" },
-            { label: "Release Date", value: gpu["Release Date"] || "N/A" },
+            {
+              label: "Release Date",
+              value: gpu["Release Date"]
+                ? new Date(gpu["Release Date"]).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })
+                : "N/A",
+            },
             { label: "Form Factor", value: gpu["Form Factor"] || "N/A" },
           ]}
           title="General Information"
@@ -111,7 +121,7 @@ export default async function Page({ params }: { params: { ID: string } }) {
               label: "Fabrication Node",
               value: gpu["Fabrication Node"] || "N/A",
             },
-            { label: "Ray Tracing", value: gpu["Ray Tracing"] || "N/A" },
+            { label: "Ray Tracing", value: gpu["Ray Tracing"].toString() || "N/A" },
           ]}
           title="Architecture Details"
         />
@@ -194,7 +204,7 @@ export default async function Page({ params }: { params: { ID: string } }) {
           title="Power Details"
         />
       </section>
-      <ProductsCTA product={gpu.Name} />
+      <ProductsCTA product={gpu.Name} productid={ID}/>
 
     </main>
   );

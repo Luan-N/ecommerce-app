@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Bookmark from "./bookmark";
 
-import { CiBookmark } from "react-icons/ci";
-
-export default function ProductsCTA({ product }: { product: string }) {
+export default function ProductsCTA({ product, productid }: { product: string, productid: string }) {
   const [text, setText] = useState<string>("");
 
   const query = product.replace(/\s+/g, "+");
@@ -107,10 +106,7 @@ export default function ProductsCTA({ product }: { product: string }) {
       <h2 className="text-sm mt-4 mb-2 text-black/50 border-b text-center w-full">
         Bookmark
       </h2>
-      <button className="w-full px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-500 transition-colors cursor-pointer">
-        Bookmark
-        <CiBookmark className="inline-block text-xl mx-1" />
-      </button>
+      <Bookmark product={product} productid={productid}/>
     </section>
   );
 }

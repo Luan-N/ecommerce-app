@@ -223,7 +223,7 @@ export default async function Page({ params }: { params: { ID: string } }) {
           title="Cooling Solutions"
         />
       </section>
-      <ProductsCTA product={cpu.Name}/>
+      <ProductsCTA product={cpu.Name} productid={ID}/>
 
     </main>
   );
