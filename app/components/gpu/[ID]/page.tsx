@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import SpecificationNav from "@/components/specification-nav";
 import DescriptionList from "@/components/description-list";
-import { getItemInfo } from "@/lib/db-services/info-utils";
+import { getItemInfo } from "@/lib/db-services/component-info-utils";
 import ProductsCTA from "@/components/products-cta";
 import ScrollUp from "@/components/scroll-up";
 

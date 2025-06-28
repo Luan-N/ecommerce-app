@@ -1,5 +1,6 @@
 "use client";
 
+import { get } from "http";
 import { useEffect, useState } from "react";
 import { CiBookmark } from "react-icons/ci";
 
@@ -12,10 +13,20 @@ export default function Bookmark({
 }) {
   const [isBookMarked, setIsBookMarked] = useState(false);
 
-  // Toggle function
-  function toggleBookmark(itemId: string) {
+  function getBookmarks() {
     const bookmarksStr = localStorage.getItem("bookmarks");
     const bookmarks = bookmarksStr ? JSON.parse(bookmarksStr) : [];
+    return bookmarks;
+  }
+
+  useEffect(() => {
+    const bookmarks = getBookmarks();
+    setIsBookMarked(bookmarks.includes(productid));
+  }, [productid]);
+
+  // Toggle function
+  function toggleBookmark(itemId: string) {
+    const bookmarks = getBookmarks();
 
     if (bookmarks.includes(itemId)) {
       // Remove bookmark
@@ -27,7 +38,7 @@ export default function Bookmark({
       bookmarks.push(itemId);
     }
     localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
-    setIsBookMarked(bookmarks.includes(productid));
+    setIsBookMarked(bookmarks.includes(itemId));
   }
 
   return (

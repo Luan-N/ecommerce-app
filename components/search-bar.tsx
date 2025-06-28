@@ -121,7 +121,7 @@ export default function SearchBar() {
           {results.map((item) => (
             <li
               key={item.ID}
-              className="flex items-center space-x-3 p-2 border rounded bg-white shadow-sm h-16"
+              className="flex items-center space-x-3 m-2 border rounded bg-white shadow-sm h-16"
             >
               <Link
                 href={`/components/${item.type}/${item.ID}`}
@@ -129,7 +129,7 @@ export default function SearchBar() {
                   setQuery("");
                   setResults([]); // Clear the results
                 }} // Clear the input after navigating
-                className="flex items-center space-x-3 group"
+                className="flex items-center h-full group hover:bg-gray-200 p-2"
               >
                 <Image
                   src={item["Image URL"]}
