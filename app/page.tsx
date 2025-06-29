@@ -73,7 +73,7 @@ export default async function Home() {
                 Start Building
               </Link>
               <Link
-                href="/components"
+                href="/components/cpu"
                 className="inline-block px-5 py-2 rounded-lg border-2 border-orange-600 text-orange-600 font-medium hover:bg-orange-100 transition-colors"
               >
                 Browse Components
@@ -98,26 +98,36 @@ export default async function Home() {
         <div className="flex flex-col-reverse md:flex-row w-full h-200 md:h-125 justify-between border hover:border-orange-600 rounded-2xl overflow-hidden transition-colors">
           <div className="md:flex-1 flex flex-col justify-between p-5 bg-gray-50">
             <div>
-              <Link href={`/pc-selection/${featured.ID}`} className="text-2xl font-bold hover:text-orange-600 ">{featured.Name}</Link>
+              <Link
+                href={`/pc-selection/${featured.ID}`}
+                className="text-2xl font-bold hover:text-orange-600 "
+              >
+                {featured.Name}
+              </Link>
               <p className="text-gray-600 mt-1">
                 {featured["Short Description"]}
               </p>
 
               <ul className="mt-4 text-sm text-gray-700 space-y-1">
                 <li>
-                  <span className="font-semibold my-5">CPU:</span> {featured.CPU}
+                  <span className="font-semibold my-5">CPU:</span>{" "}
+                  {featured.CPU}
                 </li>
                 <li>
-                  <span className="font-semibold my-5">GPU:</span> {featured.GPU}
+                  <span className="font-semibold my-5">GPU:</span>{" "}
+                  {featured.GPU}
                 </li>
                 <li>
-                  <span className="font-semibold my-5">RAM:</span> {featured.RAM}
+                  <span className="font-semibold my-5">RAM:</span>{" "}
+                  {featured.RAM}
                 </li>
                 <li>
-                  <span className="font-semibold my-5">VRAM:</span> {featured.VRAM}
+                  <span className="font-semibold my-5">VRAM:</span>{" "}
+                  {featured.VRAM}
                 </li>
                 <li>
-                  <span className="font-semibold my-5">L3 Cache:</span> {featured["L3 Cache"]}
+                  <span className="font-semibold my-5">L3 Cache:</span>{" "}
+                  {featured["L3 Cache"]}
                 </li>
               </ul>
             </div>
@@ -126,21 +136,27 @@ export default async function Home() {
               <p className="my-4 text-2xl font-bold text-orange-600">
                 ~ ${featured.Price.toFixed(2)}
               </p>
-              <Link href={`/pc-selection/${featured.ID}`} className="mt-auto block text-center w-full px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-500 transition-colors cursor-pointer">
+              <Link
+                href={`/pc-selection/${featured.ID}`}
+                className="mt-auto block text-center w-full px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-500 transition-colors cursor-pointer"
+              >
                 View Details
               </Link>
             </div>
           </div>
           {/* Featured Product Image */}
-          <div className="w-full md:w-[60%] flex justify-center">
+          <Link
+            href={`/pc-selection/${featured.ID}`}
+            className="w-full md:w-[60%] flex justify-center"
+          >
             <Image
-              src= "/featured_holder.jpg"
+              src={`/pc-images/${featured.Name}.png`}
               alt="Featured Product Image"
               width={600}
               height={400}
               className="h-full w-auto object-contain"
             />
-          </div>
+          </Link>
         </div>
       </section>
       {/* Carousel */}
@@ -158,17 +174,27 @@ export default async function Home() {
         <Carousel>
           <CarouselContent>
             {otherFeatured.map((value, index) => (
-              <CarouselItem key={index} className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 p-2">
-                <Card className="hover:border-orange-600 transition-colors">
-                  <CardContent className="flex flex-col items-center justify-between p-6">
+              <CarouselItem
+                key={index}
+                className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+              >
+                <Card className="hover:border-orange-600 transition-colors h-full">
+                  <CardContent className="flex flex-col items-center justify-between p-3">
+                    <Link href={`/pc-selection/${value.ID}`}>
                     <Image
-                      src="/featured_holder.jpg"
+                      src={`/pc-images/${value.Name}.png`}
                       alt={value.Name}
                       width={300}
                       height={300}
                       className="w-auto"
                     />
-                    <Link href={`/pc-selection/${value.ID}`} className="text-2xl font-semibold hover:text-orange-600">{value.Name}</Link>
+                    </Link>
+                    <Link
+                      href={`/pc-selection/${value.ID}`}
+                      className="text-xl font-semibold hover:text-orange-600"
+                    >
+                      {value.Name}
+                    </Link>
                   </CardContent>
                 </Card>
               </CarouselItem>
