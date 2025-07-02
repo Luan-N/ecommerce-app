@@ -50,12 +50,13 @@ export default async function Home() {
           src="/landing_img.jpg"
           alt="Landing Image"
           fill
+          priority
           className="object-cover"
         />
 
         {/* Landing Card */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="relative bg-white/80 backdrop-blur-sm max-w-lg w-11/12 p-6 md:p-8 rounded-2xl shadow-2xl border border-transparent hover:border-orange-500 transition-colors">
+          <div className="relative bg-white/80 backdrop-blur-sm max-w-lg w-11/12 p-6 md:p-8 rounded-2xl shadow-2xl border-2 border-transparent hover:border-orange-600 transition-colors duaration-200">
             <h1 className="text-2xl md:text-3xl font-extrabold leading-tight mb-4">
               BUILD YOUR DREAM PC — FASTER AND SMARTER
             </h1>
@@ -95,8 +96,8 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="flex flex-col-reverse md:flex-row w-full h-200 md:h-125 justify-between border hover:border-orange-600 rounded-2xl overflow-hidden transition-colors">
-          <div className="md:flex-1 flex flex-col justify-between p-5 bg-gray-50">
+        <div className="flex flex-col-reverse md:flex-row w-full h-200 md:h-125 justify-between border-2 hover:border-orange-600 hover:shadow-2xl rounded-2xl transition-all duration-200">
+          <div className="md:flex-1 flex flex-col justify-between p-5 bg-gray-50 rounded-2xl">
             <div>
               <Link
                 href={`/pc-selection/${featured.ID}`}
@@ -147,13 +148,14 @@ export default async function Home() {
           {/* Featured Product Image */}
           <Link
             href={`/pc-selection/${featured.ID}`}
-            className="w-full md:w-[60%] flex justify-center"
+            className="w-full md:w-[60%] flex justify-center bg-accent rounded-2xl"
           >
             <Image
               src={`/pc-images/${featured.Name}.png`}
               alt="Featured Product Image"
               width={600}
               height={400}
+              priority
               className="h-full w-auto object-contain"
             />
           </Link>
@@ -174,31 +176,33 @@ export default async function Home() {
         <Carousel>
           <CarouselContent>
             {otherFeatured.map((value, index) => (
-              <CarouselItem
-                key={index}
-                className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
-              >
-                <Card className="hover:border-orange-600 transition-colors h-full">
-                  <CardContent className="flex flex-col items-center justify-between p-3">
-                    <Link href={`/pc-selection/${value.ID}`}>
-                    <Image
-                      src={`/pc-images/${value.Name}.png`}
-                      alt={value.Name}
-                      width={300}
-                      height={300}
-                      className="w-auto"
-                    />
-                    </Link>
-                    <Link
-                      href={`/pc-selection/${value.ID}`}
-                      className="text-xl font-semibold hover:text-orange-600"
-                    >
-                      {value.Name}
-                    </Link>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-            ))}
+  <CarouselItem
+    key={index}
+    className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+  >
+    <Card className="hover:border-orange-600 border-transparent border-2 transition-all duration-200 hover:shadow-2xl h-full">
+  <CardContent className="flex flex-col items-center justify-start p-0">
+    <Link className="block w-full p-4 border-b border-gray-200" href={`/pc-selection/${value.ID}`}>
+      <Image
+        src={`/pc-images/${value.Name}.png`}
+        alt={value.Name}
+        width={300}
+        height={300}
+        className="w-auto mx-auto"
+      />
+    </Link>
+    <div className="p-4 w-full">
+      <Link
+        href={`/pc-selection/${value.ID}`}
+        className="text-lg font-semibold hover:text-orange-600 text-center block"
+      >
+        {value.Name}
+      </Link>
+    </div>
+  </CardContent>
+</Card>
+  </CarouselItem>
+))}
           </CarouselContent>
           <CarouselPrevious className="hidden sm:flex" />
           <CarouselNext className="hidden sm:flex" />

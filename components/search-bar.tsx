@@ -97,7 +97,7 @@ export default function SearchBar() {
         <input
           type="text"
           name="query"
-          placeholder="Search components..."
+          placeholder="Search item..."
           className="flex-grow px-3 h-9 rounded-l-sm focus:outline-none text-sm focus:bg-accent"
           value={query} // Ensure input field is controlled by the query state
           onChange={(e) => setQuery(e.target.value)}
@@ -129,7 +129,7 @@ export default function SearchBar() {
                   setQuery("");
                   setResults([]); // Clear the results
                 }} // Clear the input after navigating
-                className="flex items-center h-full group hover:bg-gray-200 p-2"
+                className="flex items-center h-full group hover:bg-gray-100 p-2"
               >
                 <Image
                   src={item["Image URL"]}

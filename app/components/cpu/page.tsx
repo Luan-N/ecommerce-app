@@ -1,18 +1,8 @@
 import BreadCrumbNavigation from "@/components/breadcrumb-nav";
 import Pagination from "@/components/pagination";
 import SearchProductCard from "@/components/search-product-card";
-import ComponentFilter from "@/components/component-filter";
+import ComponentFilter from "@/components/item-filter";
 import { getCPUFilteredItems } from "@/lib/db-services/cpu-filter";
-
-type cpuSchema = {
-  ID: string;
-  Name: string;
-  Cores: number;
-  Threads: number;
-  "Boost Clock Frequency": string;
-  "L3 Cache": string;
-  "Image URL": string;
-};
 
 export default async function CpuPage({searchParams}: { searchParams: { manf?: string, page?: string } }) {
   const params = await searchParams; // Ensure searchParams is awaited
@@ -28,8 +18,9 @@ export default async function CpuPage({searchParams}: { searchParams: { manf?: s
         <div className="inline-flex items-center justify-center gap-1 bg-muted border rounded-md p-1">
           {["All", "AMD", "Intel"].map((manf) => (
             <ComponentFilter
+              v={manf}
+              k="manf"
               key={manf}
-              manf={manf}
             />
           ))}
         </div>

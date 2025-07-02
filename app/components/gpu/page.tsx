@@ -1,17 +1,8 @@
 import BreadCrumbNavigation from "@/components/breadcrumb-nav";
 import Pagination from "@/components/pagination";
 import SearchProductCard from "@/components/search-product-card";
-import ComponentFilter from "@/components/component-filter";
+import ComponentFilter from "@/components/item-filter";
 import { getGPUFilteredItems } from "@/lib/db-services/gpu-filter";
-
-type gpuSchema = {
-  ID: string;
-  Name: string;
-  "Memory Size": string;
-  "Memory Type": string;
-  "Boost Clock": string;
-  "Image URL": string;
-};
 
 export default async function GpuPages({searchParams}: {searchParams: {manf?: string, page?: string}}) {
   const params = await searchParams;
@@ -27,8 +18,9 @@ export default async function GpuPages({searchParams}: {searchParams: {manf?: st
         <div className="inline-flex items-center justify-center gap-1 bg-muted border rounded-md p-1">
           {["All", "AMD", "NVIDIA"].map((manf) => (
             <ComponentFilter
+              k="manf"
+              v={manf}
               key={manf}
-              manf={manf}
             />
           ))}
         </div>
