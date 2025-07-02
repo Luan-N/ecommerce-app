@@ -3,6 +3,7 @@ import Pagination from "@/components/pagination";
 import SearchProductCard from "@/components/search-product-card";
 import ComponentFilter from "@/components/item-filter";
 import { getGPUFilteredItems } from "@/lib/db-services/gpu-filter";
+import ScrollUp from "@/components/scroll-up";
 
 export default async function GpuPages({searchParams}: {searchParams: {manf?: string, page?: string}}) {
   const params = await searchParams;
@@ -13,6 +14,8 @@ export default async function GpuPages({searchParams}: {searchParams: {manf?: st
 
   return (
     <main className="mt-25 mx-5 md:mx-15">
+      <ScrollUp />
+
       {/* GPU Navigation */}
       <nav className="mb-10 flex justify-center" aria-label="cpu-navigation">
         <div className="inline-flex items-center justify-center gap-1 bg-muted border rounded-md p-1">

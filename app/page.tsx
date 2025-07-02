@@ -85,6 +85,7 @@ export default async function Home() {
       </section>
       {/* Featured Product */}
       <section className="mx-5 md:mx-15 my-20" id="featured">
+        {/* Featured Section Header */}
         <h2 className="text-xl font-bold mb-5 text-start inline-block">
           Featured
         </h2>
@@ -96,7 +97,8 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="flex flex-col-reverse md:flex-row w-full h-200 md:h-125 justify-between border-2 hover:border-orange-600 hover:shadow-2xl rounded-2xl transition-all duration-200">
+        {/* Featured Product Card */}
+        <div className="flex flex-col-reverse md:flex-row w-full h-150 md:h-125 justify-between border-2 hover:border-orange-600 hover:shadow-2xl rounded-2xl transition-all duration-200">
           <div className="md:flex-1 flex flex-col justify-between p-5 bg-gray-50 rounded-2xl">
             <div>
               <Link
@@ -156,7 +158,7 @@ export default async function Home() {
               width={600}
               height={400}
               priority
-              className="h-full w-auto object-contain"
+              className="h-full w-auto object-cover"
             />
           </Link>
         </div>
@@ -176,33 +178,36 @@ export default async function Home() {
         <Carousel>
           <CarouselContent>
             {otherFeatured.map((value, index) => (
-  <CarouselItem
-    key={index}
-    className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
-  >
-    <Card className="hover:border-orange-600 border-transparent border-2 transition-all duration-200 hover:shadow-2xl h-full">
-  <CardContent className="flex flex-col items-center justify-start p-0">
-    <Link className="block w-full p-4 border-b border-gray-200" href={`/pc-selection/${value.ID}`}>
-      <Image
-        src={`/pc-images/${value.Name}.png`}
-        alt={value.Name}
-        width={300}
-        height={300}
-        className="w-auto mx-auto"
-      />
-    </Link>
-    <div className="p-4 w-full">
-      <Link
-        href={`/pc-selection/${value.ID}`}
-        className="text-lg font-semibold hover:text-orange-600 text-center block"
-      >
-        {value.Name}
-      </Link>
-    </div>
-  </CardContent>
-</Card>
-  </CarouselItem>
-))}
+              <CarouselItem
+                key={index}
+                className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+              >
+                <Card className="hover:border-orange-600 border-transparent border-2 transition-all duration-200 hover:shadow-2xl h-full">
+                  <CardContent className="flex flex-col items-center justify-start p-0">
+                    <Link
+                      className="block w-full p-4 border-b border-gray-200"
+                      href={`/pc-selection/${value.ID}`}
+                    >
+                      <Image
+                        src={`/pc-images/${value.Name}.png`}
+                        alt={value.Name}
+                        width={300}
+                        height={300}
+                        className="w-auto mx-auto"
+                      />
+                    </Link>
+                    <div className="p-4 w-full">
+                      <Link
+                        href={`/pc-selection/${value.ID}`}
+                        className="text-lg font-semibold hover:text-orange-600 text-center block"
+                      >
+                        {value.Name}
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+            ))}
           </CarouselContent>
           <CarouselPrevious className="hidden sm:flex" />
           <CarouselNext className="hidden sm:flex" />

@@ -1,4 +1,7 @@
 import ComponentFilter from "@/components/item-filter";
+import { Card, CardContent } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
+import { Link } from "lucide-react";
 import React from "react";
 
 export default function Products() {
@@ -26,6 +29,44 @@ export default function Products() {
             ))}
           </div>
         </div>
+
+        {/* <Carousel>
+          <CarouselContent>
+            {otherFeatured.map((value, index) => (
+              <CarouselItem
+                key={index}
+                className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+              >
+                <Card className="hover:border-orange-600 border-transparent border-2 transition-all duration-200 hover:shadow-2xl h-full">
+                  <CardContent className="flex flex-col items-center justify-start p-0">
+                    <Link
+                      className="block w-full p-4 border-b border-gray-200"
+                      href={`/pc-selection/${value.ID}`}
+                    >
+                      <Image
+                        src={`/pc-images/${value.Name}.png`}
+                        alt={value.Name}
+                        width={300}
+                        height={300}
+                        className="w-auto mx-auto"
+                      />
+                    </Link>
+                    <div className="p-4 w-full">
+                      <Link
+                        href={`/pc-selection/${value.ID}`}
+                        className="text-lg font-semibold hover:text-orange-600 text-center block"
+                      >
+                        {value.Name}
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="hidden sm:flex" />
+          <CarouselNext className="hidden sm:flex" />
+        </Carousel> */}
       </nav>
     </main>
   );

@@ -28,6 +28,7 @@ const ITEMS_PER_PAGE = 20;
 let cachedProducts: ProductSchema[] | null = null;
 let cacheLastUpdated: number | null = null;
 
+//live search function
 export async function getSearchableProducts(
   currentTime: number
 ): Promise<ProductSchema[]> {
@@ -79,7 +80,7 @@ export async function getSearchableProducts(
     throw error;
   }
 }
-
+//Full search function
 export async function getSearchItems(query: string, page: number) {
   const currentTime = Date.now();
 

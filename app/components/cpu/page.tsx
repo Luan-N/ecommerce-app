@@ -3,6 +3,7 @@ import Pagination from "@/components/pagination";
 import SearchProductCard from "@/components/search-product-card";
 import ComponentFilter from "@/components/item-filter";
 import { getCPUFilteredItems } from "@/lib/db-services/cpu-filter";
+import ScrollUp from "@/components/scroll-up";
 
 export default async function CpuPage({searchParams}: { searchParams: { manf?: string, page?: string } }) {
   const params = await searchParams; // Ensure searchParams is awaited
@@ -13,6 +14,7 @@ export default async function CpuPage({searchParams}: { searchParams: { manf?: s
 
   return (
     <main className="mt-25 mx-5 md:mx-15">
+      <ScrollUp />
       {/* CPU Navigation */}
       <nav className="mb-10 flex justify-center" aria-label="cpu-navigation">
         <div className="inline-flex items-center justify-center gap-1 bg-muted border rounded-md p-1">
