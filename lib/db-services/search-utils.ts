@@ -20,6 +20,14 @@ export type GPUIndexItem = {
   "Image URL": string;
 };
 
+export type PCIndexItem = {
+  ID: string;
+  Name: string;
+  "GPU Type": string;
+  "CPU Type": string;
+  "Tier": string;
+}
+
 // --- Constants ---
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 const ITEMS_PER_PAGE = 20;
@@ -43,7 +51,7 @@ export async function getSearchableProducts(
   console.log("📡 Fetching cpu/gpu search data from Firestore");
 
   try {
-    const [cpuIndexDoc, gpuIndexDoc] = await Promise.all([
+    const [cpuIndexDoc, gpuIndexDoc, pcIndexDoc] = await Promise.all([
       fetchFirestoreDocument<{ Items: CPUIndexItem[] }>(
         "search-index",
         "cpu-index"
@@ -52,10 +60,15 @@ export async function getSearchableProducts(
         "search-index",
         "gpu-index"
       ),
+      fetchFirestoreDocument<{ Items: PCIndexItem[] }>(
+        "search-index",
+        "pc-index"
+      ),
     ]);
 
     const cpuItemsFromDb: CPUIndexItem[] = cpuIndexDoc?.Items || [];
     const gpuItemsFromDb: GPUIndexItem[] = gpuIndexDoc?.Items || [];
+    const pcItemsFromDb: PCIndexItem[] = pcIndexDoc?.Items || [];
 
     const cpuProducts: ProductSchema[] = cpuItemsFromDb.map(
       mapCPUItemToProductSchema
@@ -63,8 +76,11 @@ export async function getSearchableProducts(
     const gpuProducts: ProductSchema[] = gpuItemsFromDb.map(
       mapGPUItemToProductSchema
     );
+    const pcProducts: ProductSchema[] = pcItemsFromDb.map(
+      mapPCItemToProductSchema
+    );
 
-    const combinedItems = [...cpuProducts, ...gpuProducts];
+    const combinedItems = [...cpuProducts, ...gpuProducts, ...pcProducts];
 
     // ONLY update cache if fetch was successful
     cachedProducts = combinedItems;
@@ -151,6 +167,20 @@ export function mapGPUItemToProductSchema(item: GPUIndexItem): ProductSchema {
     Name: item.Name,
     Description: description,
     "Image URL": item["Image URL"],
+  };
+}
+
+export function mapPCItemToProductSchema(item: PCIndexItem): ProductSchema {
+  return {
+    type: "pc",
+    ID: item.ID,
+    Name: item.Name,
+    Description: [
+      ["GPU Type", item["GPU Type"]],
+      ["CPU Type", item["CPU Type"]],
+      ["Tier", item["Tier"]],
+    ],
+    "Image URL": `/pc-images/${item.Name}.png`,
   };
 }
 
