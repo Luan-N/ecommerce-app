@@ -7,6 +7,8 @@ export async function POST(request: Request){
     const cpuType = searchParams.get("cpu") || "all";
     const gpuType = searchParams.get("gpu") || "all";
 
+    console.log("Tier:", tier, "CPU Type:", cpuType, "GPU Type:", gpuType, "Page:", page);
+
     const data = await getPCFilteredItems(tier, cpuType, gpuType, page);
 
     return NextResponse.json(data);
