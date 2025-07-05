@@ -10,17 +10,11 @@ export default function ComponentFilter({ k, v }: { k: string, v: string }) {
   const isActive = currentParamValue?.toLowerCase() === v.toLowerCase();
 
   // 1. Create a mutable copy of the current search parameters.
-  const params = new URLSearchParams(searchParams.toString());
-
-  params.set(k, v.toLowerCase());
-
-  // 3. Generate the new search string.
-  const href = `?${params.toString()}`;
 
   return (
     <Link
       key={v}
-      href={href}
+      href={`?${k}=${v.toLowerCase()}`}
       className={`px-4 py-1 text-sm font-medium rounded-md transition-colors ${
         isActive
           ? "bg-white text-black shadow"

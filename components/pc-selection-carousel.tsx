@@ -36,7 +36,7 @@ export default function PCSelectionCarousel({ tier, description }: { tier: strin
         body: JSON.stringify({ tier: tier, page: page }),
       });
       const data = await response.json();
-      setItems(data.paginatedItems || []);
+      setItems(data || []);
     };
     fetchPcItems();
   }, [page]);
@@ -56,7 +56,7 @@ export default function PCSelectionCarousel({ tier, description }: { tier: strin
           {items.map((value, index) => (
               <CarouselItem
                 key={index}
-                className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5"
+                className="basis-1/1 sm:basis-1/3 md:basis-1/4 lg:basis-1/5"
               >
                 <Card className="hover:border-orange-600 border-transparent border-2 transition-all duration-200 hover:shadow-2xl h-full">
                   <CardContent className="flex flex-col items-center justify-start p-0">

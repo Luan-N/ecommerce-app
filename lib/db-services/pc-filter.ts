@@ -32,18 +32,11 @@ export async function getPCFilteredItems(tier: string | "all", cpuType: string |
 
   try {
     const allPcItems = await getPCItems(currentTime);
-    // create 4 separate components for each tier, backend will handle the filtering by page/tier/cpu/gpu
 
     //filter by tier
     const tierFilter = tier == "all" ? allPcItems : allPcItems.filter(item => item.Tier.toLowerCase() === tier.toLowerCase());
-    //filter by cpu
-    const cpuFilter = cpuType == "all" ? tierFilter : tierFilter.filter(item => item["CPU Type"].toLowerCase().includes(cpuType.toLowerCase()));
-    //filter by gpu
-    const fullFilter = gpuType == "all" ? cpuFilter : cpuFilter.filter(item => item["GPU Type"].toLowerCase().includes(gpuType.toLowerCase()));
 
-    const { paginatedItems, totalPages } = paginateItems(fullFilter, pageParam, ITEMS_PER_PAGE);
-
-    return { paginatedItems, totalPages, pageParam };
+    return tierFilter;
 
   } catch (error) {
     console.error("Error in GET PC items API:", error);
