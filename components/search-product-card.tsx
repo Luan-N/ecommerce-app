@@ -21,6 +21,11 @@ interface SearchProductCardProps {
 }
 
 export default function SearchProductCard({ product }: SearchProductCardProps) {
+
+  let url = `/components/${product.type}/${product.ID}`;
+  if(product.type === "pc") 
+    url = `/pc-selection/${product.ID}`;
+
   return (
     <Card
       className="flex flex-col items-center my-4 md:flex-row gap-6 md:p-6
@@ -32,7 +37,7 @@ export default function SearchProductCard({ product }: SearchProductCardProps) {
         className="w-auto md:w-[150px] md:min-w-[150px] h-auto md:h-[150px] "
         aria-label="cpu-image"
       >
-        <Link href={`/components/${product.type}/${product.ID}`}>
+        <Link href={url}>
           <Image
             src={product["Image URL"]}
             alt={product.Name}
@@ -49,7 +54,7 @@ export default function SearchProductCard({ product }: SearchProductCardProps) {
         <CardHeader>
           <CardTitle className="text-lg font-semibold">
             <Link
-              href={`/components/${product.type}/${product.ID}`}
+              href={url}
               className="hover:text-orange-600"
             >
               {product.Name}
@@ -69,7 +74,7 @@ export default function SearchProductCard({ product }: SearchProductCardProps) {
         {/* View Details */}
         <CardFooter className="justify-center md:justify-end">
           <Link
-            href={`/components/${product.type}/${product.ID}`}
+            href={url}
             className="
         bg-orange-600 text-white font-semibold px-4 py-2 rounded-md
         hover:bg-orange-700 active:bg-orange-800

@@ -7,6 +7,8 @@ import { CiBookmark } from "react-icons/ci";
 import { FaStaylinked } from "react-icons/fa6";
 import { useState } from "react";
 import SearchBar from "@/components/search-bar";
+import { GoCpu } from "react-icons/go";
+import { BsGpuCard } from "react-icons/bs";
 
 export default function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -54,18 +56,23 @@ export default function NavBar() {
               />
             </button>
             {dropdownOpen && (
-              <div className="absolute right-0 w-48 bg-white rounded-md shadow-lg ring-1 ring-black/5">
-                <Link
-                  href="/components/cpu"
-                  className="block px-4 py-2 text-sm hover:bg-gray-50 rounded-t-md"
-                >
-                  CPU
+              <div className="absolute py-2 right-0 w-full bg-white rounded-md shadow-lg ring-1 ring-black/5">
+
+                <Link href="/components/cpu" className="flex items-center justify-between px-3 py-2 border-b hover:bg-accent">
+                  <div className="flex items-center space-x-2">
+                    <GoCpu className="text-gray-400" />
+                    <span className="text-sm">CPU</span>
+                  </div>
+                  <RiArrowDropDownLine className="ml-1 transition-transform rotate-270" />
+
                 </Link>
-                <Link
-                  href="/components/gpu"
-                  className="block px-4 py-2 text-sm hover:bg-gray-50 rounded-b-md"
-                >
-                  GPU
+                <Link href="/components/gpu" className="flex items-center justify-between px-3 py-2 border-b hover:bg-accent">
+                  <div className="flex items-center space-x-2">
+                    <BsGpuCard className="text-gray-400" />
+                    <span className="text-sm">GPU</span>
+                  </div>
+                  <RiArrowDropDownLine className="ml-1 transition-transform rotate-270" />
+
                 </Link>
               </div>
             )}
@@ -81,7 +88,7 @@ export default function NavBar() {
           >
             {mobileOpen ? <VscClose className="text-xl"/> : <RiMenuFold2Fill className="text-xl"/>}
           </button>
-
+          {/* Search Bar */}
           <SearchBar/>
 
 

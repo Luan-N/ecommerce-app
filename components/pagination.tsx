@@ -52,8 +52,7 @@ export default function Pagination({ totalPages }: PaginationProps) {
         aria-label="Go to page"
         className={`
           w-12 py-2 text-center text-sm sm:text-base z-1
-          border-t border-b border-gray-300 bg-white 
-          focus:outline-none focus:ring-2 focus:ring-orange-500
+          border-t border-b border-gray-300 bg-white
         `}
       />
 
