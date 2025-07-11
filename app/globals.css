@@ -146,3 +146,13 @@ a {
     @apply hover:bg-accent hover:text-accent-foreground hover:rounded-sm px-4 py-2;
   }
 }
+
+@keyframes bgPulse{
+  0% { background-color: rgb(229 231 235);}
+  50% { background-color: rgb(243 244 246);}
+  100% { background-color: rgb(229 231 235);}
+}
+
+.bg-pulse {
+  animation: bgPulse 1s infinite;
+}
