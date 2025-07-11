@@ -7,11 +7,15 @@ import { CiBookmark } from "react-icons/ci";
 export default function Bookmark({
   product,
   productid,
+  productimg
 }: {
   product: string;
   productid: string;
+  productimg: string;
 }) {
   const [isBookMarked, setIsBookMarked] = useState(false);
+
+  const bookmarkProduct = productid + "|" + product + "|" + productimg;
 
   function getBookmarks() {
     const bookmarksStr = localStorage.getItem("bookmarks");
@@ -21,29 +25,29 @@ export default function Bookmark({
 
   useEffect(() => {
     const bookmarks = getBookmarks();
-    setIsBookMarked(bookmarks.includes(productid));
-  }, [productid]);
+    setIsBookMarked(bookmarks.includes(bookmarkProduct));
+  }, [bookmarkProduct]);
 
   // Toggle function
-  function toggleBookmark(itemId: string) {
+  function toggleBookmark(product: string) {
     const bookmarks = getBookmarks();
 
-    if (bookmarks.includes(itemId)) {
+    if (bookmarks.includes(product)) {
       // Remove bookmark
-      const index = bookmarks.indexOf(itemId);
+      const index = bookmarks.indexOf(product);
       bookmarks.splice(index, 1);
     } else {
       // Add bookmark
-      console.log("Adding bookmark for:", itemId);
-      bookmarks.push(itemId);
+      console.log("Adding bookmark for:", product);
+      bookmarks.push(product);
     }
     localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
-    setIsBookMarked(bookmarks.includes(itemId));
+    setIsBookMarked(bookmarks.includes(bookmarkProduct));
   }
 
   return (
     <button
-      onClick={() => toggleBookmark(productid)}
+      onClick={() => toggleBookmark(bookmarkProduct)}
       className={`w-full px-4 py-2 transition-colors cursor-pointer rounded ${isBookMarked ? "bg-white text-orange-600 hover:bg-orange-100 border border-orange-600" : "bg-orange-600 text-white hover:bg-orange-500 "}`}
     >
       {isBookMarked ? "Remove Bookmark" : "Add Bookmark"}
