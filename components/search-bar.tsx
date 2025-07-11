@@ -124,7 +124,7 @@ export default function SearchBar() {
               className="flex items-center space-x-3 m-2 border rounded bg-white shadow-sm h-16"
             >
               <Link
-                href={`/components/${item.type}/${item.ID}`}
+                href={`/${item.type === "pc" ? "pc-selection" : `components/${item.type}`}/${item.ID}`}
                 onClick={() => {
                   setQuery("");
                   setResults([]); // Clear the results

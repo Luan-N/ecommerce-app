@@ -13,6 +13,8 @@ export default function PcBuilder() {
     e.preventDefault();
     setText("");
     setResponseVisible(true);
+    document.getElementById("response")?.scrollIntoView({ behavior: "smooth" });
+
     const form = new FormData(e.currentTarget);
     // Convert to a plain object:
     const formData = Object.fromEntries(form.entries());
@@ -373,7 +375,7 @@ export default function PcBuilder() {
       </section>
       {/* Response */}
       {responseVisible && (
-        <section className="w-full max-w-2xl p-6 bg-white rounded-lg shadow-md">
+        <section id="response" className="w-full max-w-2xl p-6 bg-white rounded-lg shadow-md">
           <div className="w-full max-w-2xl mt-8">
             <h2 className="text-lg p-1 font-semibold text-orange-800 mb-4 uppercase">
               Compatibility Report
