@@ -9,7 +9,7 @@ export async function POST(request: Request){
 
     console.log("Tier:", tier, "CPU Type:", cpuType, "GPU Type:", gpuType, "Page:", page);
 
-    const data = await getPCFilteredItems(tier, cpuType, gpuType, page);
+    const data = await getPCFilteredItems(tier);
 
     return NextResponse.json(data);
 }

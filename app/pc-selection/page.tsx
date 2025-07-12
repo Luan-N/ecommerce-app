@@ -1,4 +1,3 @@
-import ComponentFilter from "@/components/item-filter";
 import React from "react";
 
 import PCSelectionCarousel from "@/components/pc-selection-carousel";

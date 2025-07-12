@@ -1,6 +1,5 @@
 "use client";
 
-import { get } from "http";
 import { useEffect, useState } from "react";
 import { CiBookmark } from "react-icons/ci";
 

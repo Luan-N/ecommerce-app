@@ -59,9 +59,9 @@ const sections = [
   "Power Details",
 ];
 
-export default async function Page({ params }: { params: { ID: string } }) {
+export default async function Page({ params }: { params: Promise<{ ID: string }> }) {
   const { ID } = await params;
-  let gpu: gpuSchema = await getItemInfo(ID, "gpus");
+  const gpu = await getItemInfo<gpuSchema>(ID, "gpus");
 
   return (
     <main className="flex flex-col md:flex-row justify-evenly min-h-screen bg-gray-50 mt-25 mx-5 lg:ml-75 gap-y-10">

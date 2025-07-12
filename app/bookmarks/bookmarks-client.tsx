@@ -1,12 +1,17 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function Bookmark() {
 
-  const bookmarks = localStorage.getItem("bookmarks");
-  const parsedBookmarks = bookmarks ? JSON.parse(bookmarks) : [];
+  const [parsedBookmarks, setParsedBookmarks] = useState<string[]>([]);
+
+  useEffect(() => {
+    const raw = localStorage.getItem("bookmarks");
+    setParsedBookmarks(raw ? JSON.parse(raw) : []);
+  }, []);
 
   return (
     <>

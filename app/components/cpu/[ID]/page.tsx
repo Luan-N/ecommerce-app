@@ -53,9 +53,9 @@ const sections = [
   "Cooling Solutions",
 ];
 
-export default async function Page({ params }: { params: { ID: string } }) {
+export default async function Page({ params }: { params: Promise<{ ID: string }> }) {
   const { ID } = await params;
-  let cpu: cpuSchema = await getItemInfo(ID, "cpus");
+  const cpu = await getItemInfo<cpuSchema>(ID, "cpus")
 
   return (
     <main className="flex flex-col md:flex-row justify-evenly min-h-screen bg-gray-50 mt-25 mx-5 lg:ml-75 gap-y-10">

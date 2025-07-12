@@ -44,7 +44,7 @@ type pcSchema = {
   };
 };
 
-export default async function Page({ params }: { params: { ID: string } }) {
+export default async function Page({ params }: { params: Promise<{ ID: string }> }) {
   const { ID } = await params;
 
   const pcData = (await getPCInfo(ID)) as pcSchema;

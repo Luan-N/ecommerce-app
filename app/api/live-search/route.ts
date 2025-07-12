@@ -2,15 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSearchableProducts } from "@/lib/db-services/search-utils";
 import { ApiError } from "next/dist/server/api-utils";
 
-// --- Types ---
-type ProductSchema = {
-  type: string; // 'cpu' or 'gpu'
-  ID: string;
-  Name: string;
-  Description: [string, string][];
-  "Image URL": string;
-};
-
 // --- Constants ---
 const SEARCH_RESULTS_LIMIT = 3;
 

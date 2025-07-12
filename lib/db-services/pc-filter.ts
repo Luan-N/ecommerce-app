@@ -1,8 +1,8 @@
-import { paginateItems, PCIndexItem } from '@/lib/db-services/search-utils';
+import { PCIndexItem } from '@/lib/db-services/search-utils';
 import { fetchFirestoreDocument } from '@/lib/db-services/firestore-db'; // Assuming db-utils is in this path
 
 // --- Constants ---
-const ITEMS_PER_PAGE = 5;
+//const ITEMS_PER_PAGE = 5;
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 // --- Cache State ---
@@ -27,7 +27,7 @@ async function getPCItems(currentTime: number): Promise<PCIndexItem[]> {
 }
 
 // --- Main GET Handler ---
-export async function getPCFilteredItems(tier: string | "all", cpuType: string | "all", gpuType: string | "all", pageParam: number | 1) {
+export async function getPCFilteredItems(tier: string) {
   const currentTime = Date.now();
 
   try {

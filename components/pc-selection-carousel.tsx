@@ -23,7 +23,8 @@ type PcItem = {
 
 export default function PCSelectionCarousel({ tier, description }: { tier: string, description: string }) {
 
- const [page, setPage] = useState(1);
+  //const [page, setPage] = useState(1);
+  //setPage(1); // Reset to page 1 when tier changes
   const [items, setItems] = useState<PcItem[]>([]);
 
   useEffect(() => {
@@ -33,13 +34,13 @@ export default function PCSelectionCarousel({ tier, description }: { tier: strin
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ tier: tier, page: page }),
+        body: JSON.stringify({ tier: tier}),
       });
       const data = await response.json();
       setItems(data || []);
     };
     fetchPcItems();
-  }, [page]);
+  }, [tier]);
 
   return (
     <section className=" my-10">

@@ -11,7 +11,7 @@ type productSchema = {
   "Image URL": string;
 };
 
-export default async function FullSearchPage({searchParams}: {searchParams: {query?: string, page?: string}}) {
+export default async function FullSearchPage({searchParams}: {searchParams: Promise<{query?: string, page?: string}>}) {
   const params = await searchParams; // Ensure searchParams is awaited
   const queryParam = params.query || ""; // Default to empty string if not provided
   const pageParam = params.page || 1; // Default to page 1 if not provided

@@ -27,7 +27,7 @@ export default function ProductsCTA({ product, productid, productimg, producttyp
     };
 
     fetchPrice();
-  }, [product]); // <--- Add this empty dependency array
+  }, [prompt]); // <--- Add this empty dependency array
 
   return (
     <section

@@ -5,7 +5,7 @@ import ComponentFilter from "@/components/item-filter";
 import { getGPUFilteredItems } from "@/lib/db-services/gpu-filter";
 import ScrollUp from "@/components/scroll-up";
 
-export default async function GpuPages({searchParams}: {searchParams: {manf?: string, page?: string}}) {
+export default async function GpuPages({searchParams}: {searchParams: Promise<{manf?: string, page?: string}>}) {
   const params = await searchParams;
   const manf = params.manf || "all";
   const page = Number(params.page) || 1; // Default to page 1 if not provided
