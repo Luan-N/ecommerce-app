@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@next/swc-darwin-arm64": "^15.3.5",
     "@radix-ui/react-slot": "^1.2.3",
     "@sagi.io/workers-jwt": "^0.0.26",
     "@tailwindcss/postcss": "^4.1.7",
