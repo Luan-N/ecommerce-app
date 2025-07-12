@@ -7,15 +7,17 @@ import { CiBookmark } from "react-icons/ci";
 export default function Bookmark({
   product,
   productid,
-  productimg
+  productimg,
+  producttype
 }: {
   product: string;
   productid: string;
   productimg: string;
+  producttype: string;
 }) {
   const [isBookMarked, setIsBookMarked] = useState(false);
 
-  const bookmarkProduct = productid + "|" + product + "|" + productimg;
+  const bookmarkProduct = productid + "|" + product + "|" + productimg + "|" + producttype;
 
   function getBookmarks() {
     const bookmarksStr = localStorage.getItem("bookmarks");

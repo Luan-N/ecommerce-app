@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { GoCpu } from "react-icons/go";
 import { BsGpuCard } from "react-icons/bs";
+import Bookmark from "@/components/bookmark";
 
 type pcSchema = {
   ID: string;
@@ -70,7 +71,9 @@ export default async function Page({ params }: { params: { ID: string } }) {
             className="mx-auto mb-6 block object-contain max-h-96 rounded-lg" // Added rounded-lg for consistency
           />
         </div>
-        
+
+        {/* Bookmarks */}
+          <Bookmark product={pcData.Name} productid={ID} productimg={`/pc-images/${pcData.Name}.png`} producttype="PC" />
 
         {/* SPECIFICATIONS */}
         <h3 className="text-2xl font-semibold mb-6 text-gray-700 w-full border-b pb-2">Specifications</h3>

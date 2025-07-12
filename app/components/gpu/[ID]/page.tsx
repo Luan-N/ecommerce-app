@@ -204,7 +204,7 @@ export default async function Page({ params }: { params: { ID: string } }) {
           title="Power Details"
         />
       </section>
-      <ProductsCTA product={gpu.Name} productimg={gpu["Image URL"]} productid={ID}/>
+      <ProductsCTA product={gpu.Name} productimg={gpu["Image URL"]} productid={ID} producttype={gpu["Type"]} />
 
     </main>
   );

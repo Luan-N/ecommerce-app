@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Bookmark from "./bookmark";
 
-export default function ProductsCTA({ product, productid, productimg }: { product: string, productid: string, productimg: string }) {
+export default function ProductsCTA({ product, productid, productimg, producttype }: { product: string, productid: string, productimg: string, producttype: string }) {
   const [text, setText] = useState<string>("");
 
   const query = product.replace(/\s+/g, "+");
@@ -32,7 +32,7 @@ export default function ProductsCTA({ product, productid, productimg }: { produc
   return (
     <section
       id="cta"
-      className="flex flex-col justify-start items-center z-20 md:min-w-[300px] md:ml-5 gap-y-2"
+      className="my-10 flex flex-col justify-start items-center z-20 md:min-w-[300px] md:ml-5 gap-y-2"
     >
       <h2 className="text-sm mb-2 text-black/50 border-b text-center w-full">
         Retailers
@@ -106,7 +106,7 @@ export default function ProductsCTA({ product, productid, productimg }: { produc
       <h2 className="text-sm mt-4 mb-2 text-black/50 border-b text-center w-full">
         Bookmark
       </h2>
-      <Bookmark product={product} productid={productid} productimg={productimg}/>
+      <Bookmark product={product} productid={productid} productimg={productimg} producttype={producttype} />
     </section>
   );
 }
