@@ -5,7 +5,7 @@
 ## 🚀 Website
 
 [Website Link](https://pc-linker.vercel.app)  
-![Website Screenshot](https://ibb.co/wrSn89T6)
+![Website Screenshot]([https://ibb.co/wrSn89T6)](https://i.ibb.co/QjPWh2Zm/Screenshot-2025-07-13-at-9-45-55-PM.png)
 
 ---
 
