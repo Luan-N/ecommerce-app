@@ -1,30 +1,28 @@
 # PC Linker
 
-A PC building website
-
 ---
 
-## 🚀 Demo
+## 🚀 Website
 
-[Live Demo](https://pc-linker.vercel.app/)  
-![Website Screenshot]([https://example.com/screenshot.png](https://ibb.co/wrSn89T6))
+[Website Link](https://pc-linker.vercel.app)  
+![Website Screenshot](https://ibb.co/wrSn89T6)
 
 ---
 
 ## 🧰 Tech Stack
 
-- Frontend: `Next.js` / `React` / `HTML + CSS + JS`
-- Styling: `Tailwind CSS` / `Sass` / `Bootstrap`
-- Backend (if any): `Node.js` / `Firebase` / `Supabase` / `Cloudflare Workers`
-- Hosting: `Vercel` / `Netlify` / `GitHub Pages`
+- Frontend: `Next.js` / `Type Script`
+- Styling: `Tailwind CSS`
+- Backend: `Firebase Firestore` / `Cloudflare Workers` / `Gemini API`
+- Hosting: `Vercel`
 
 ---
 
 ## 📦 Features
 
 - 🌐 Responsive design
-- 🧠 Dark mode support
-- 📄 SEO optimized
-- 🔍 Search functionality
-- 📸 Image uploads (using Supabase / Firebase)
-*(add/remove as appropriate)*
+- Browse PC components with search functionalties and filters.
+- Find PC components prices from accross major retailers.
+- Browse  selections of preset PC build.
+- Bookmark and save your favorite items.
+- Check compatibility score of user generated PC components.
