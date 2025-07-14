@@ -7,7 +7,7 @@ A PC building website
 ## 🚀 Demo
 
 [Live Demo](https://pc-linker.vercel.app/)  
-[*(optional GIF or screenshot here)*](https://ibb.co/wrSn89T6)
+![Website Screenshot]([https://example.com/screenshot.png](https://ibb.co/wrSn89T6))
 
 ---
 
